@@ -235,5 +235,7 @@ Build path is locked: code on GitHub, app hosted on Netlify, data and sign-in on
 
 - [ ] App name: keep 'Next Book'?
 - [ ] Carousel deck size: is 15 right, or 10?
-- [ ] Genre labels for TBR grouping: the book API's subjects, or a short fixed list (sci-fi, fantasy, crime, gothic, literary, historical, contemporary)?
+
 - [ ] Audio length data is patchy in public APIs. Acceptable to enter it manually when missing?
+- [x] Genre labels for TBR grouping: decided 20 Nov 2026, a short fixed list (Sci-fi, Fantasy, Crime, Gothic, Historical, Literary, Contemporary), guessed from Open Library subjects and changeable on the book page.
+- [ ] Hand-set genres are stored on the shared catalogue (books.genre), so every reader sees them. Move to a per-reader setting before adding other users.
