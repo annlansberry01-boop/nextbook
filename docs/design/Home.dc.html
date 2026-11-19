@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Next Book: Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#111113}
+a{color:#D9B46A}a:hover{color:#EBCB8B}
+.row::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 1240px; position: relative; overflow: hidden; background: #111113; color: #F2EFE9; font-family: Inter, system-ui, sans-serif; box-sizing: border-box">
+
+<div style="display: flex; flex-direction: column; gap: 28px; padding: 20px 20px 120px 20px">
+
+<header style="display: flex; align-items: center; justify-content: space-between">
+<div style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.02em">Next Book</div>
+<div style="display: flex; gap: 8px">
+<button aria-label="Search" style="width: 44px; height: 44px; border-radius: 22px; border: 1px solid #2E2E34; background: #1B1B1F; color: #F2EFE9; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button>
+<button aria-label="Add a book" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: {{accent}}; color: #1A1406; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+</div>
+</header>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A7A39B">Currently reading</h2>
+<sc-for list="{{reading}}" as="b" hint-placeholder-count="2">
+<div style="display: flex; gap: 14px; align-items: center; background: #1B1B1F; border-radius: 14px; padding: 12px">
+<div style="width: 64px; height: 96px; flex: none; border-radius: 4px; background: {{b.color}}; box-shadow: 0 6px 18px rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: space-between; padding: 7px; box-sizing: border-box">
+<div style="font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; line-height: 1.1">{{b.title}}</div>
+<div style="font-size: 7px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.8">{{b.short}}</div>
+</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 16px; font-weight: 600">{{b.title}}</div>
+<div style="font-size: 13px; color: #A7A39B">{{b.author}}</div>
+<div style="display: flex; gap: 6px; align-items: center; margin-top: 6px">
+<span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 999px; border: 1px solid #3A3A41; color: #CFCBC3">{{b.format}}</span>
+</div>
+</div>
+<button style="flex: none; height: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid #3A3A41; background: transparent; color: #F2EFE9; font-family: Inter, sans-serif; font-size: 13px; font-weight: 600; cursor: pointer">Finish</button>
+</div>
+</sc-for>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 18px; background: #1E1C18; border: 1px solid #3A3226">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.01em">What should I read next?</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.45; color: #B9B4AA">A quick mood check, then three picks from your TBR and beyond.</p>
+</div>
+<a href="NextRead.dc.html" style="height: 48px; border-radius: 24px; background: {{accent}}; color: #1A1406; font-size: 15px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center">Pick my next read</a>
+</section>
+
+<a href="Discover.dc.html" style="display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 18px; background: #1B1B1F; text-decoration: none; color: #F2EFE9">
+<div style="display: flex; flex: none; width: 76px; height: 64px; position: relative">
+<div style="position: absolute; left: 0; top: 8px; width: 36px; height: 54px; border-radius: 3px; background: #3B4A5C; transform: rotate(-10deg)"></div>
+<div style="position: absolute; left: 20px; top: 4px; width: 36px; height: 54px; border-radius: 3px; background: #6B3A3A; transform: rotate(-2deg)"></div>
+<div style="position: absolute; left: 40px; top: 6px; width: 36px; height: 54px; border-radius: 3px; background: #4F5B3A; transform: rotate(8deg)"></div>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+<div style="font-size: 15px; font-weight: 600">Remember what you've read</div>
+<div style="font-size: 13px; color: #A7A39B">Swipe through 15 books</div>
+</div>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A7A39B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A7A39B">TBR</h2>
+<div style="display: flex; gap: 8px; align-items: center">
+<button style="height: 32px; padding: 0 10px 0 12px; border-radius: 16px; border: 1px solid #3A3A41; background: transparent; color: #CFCBC3; font-family: Inter, sans-serif; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 4px; cursor: pointer">Date added<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+<a href="#" style="font-size: 13px; font-weight: 500; text-decoration: none">See all</a>
+</div>
+</div>
+<div class="row" style="display: flex; gap: 12px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 4px 20px; scrollbar-width: none">
+<sc-for list="{{tbr}}" as="b" hint-placeholder-count="5">
+<div style="flex: none; width: 100px; display: flex; flex-direction: column; gap: 8px">
+<div style="width: 100px; height: 150px; border-radius: 5px; background: {{b.color}}; box-shadow: 0 8px 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: space-between; padding: 10px; box-sizing: border-box">
+<div style="font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; line-height: 1.12">{{b.title}}</div>
+<div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85">{{b.author}}</div>
+</div>
+<div style="font-size: 12px; line-height: 1.3; color: #CFCBC3">{{b.title}}</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #A7A39B">Recently read</h2>
+<a href="#" style="font-size: 13px; font-weight: 500; text-decoration: none">Diary</a>
+</div>
+<div class="row" style="display: flex; gap: 12px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 4px 20px; scrollbar-width: none">
+<sc-for list="{{recent}}" as="b" hint-placeholder-count="5">
+<div style="flex: none; width: 100px; display: flex; flex-direction: column; gap: 8px">
+<div style="width: 100px; height: 150px; border-radius: 5px; background: {{b.color}}; box-shadow: 0 8px 20px rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: space-between; padding: 10px; box-sizing: border-box">
+<div style="font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; line-height: 1.12">{{b.title}}</div>
+<div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85">{{b.author}}</div>
+</div>
+<sc-if value="{{b.rated}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 2px; align-items: center" role="img" aria-label="{{b.label}}">
+<sc-for list="{{b.stars}}" as="s" hint-placeholder-count="5">
+<sc-if value="{{s.on}}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="{{accent}}" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"></path></svg></sc-if>
+<sc-if value="{{s.off}}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5A5A62" stroke-width="1.6" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"></path></svg></sc-if>
+</sc-for>
+<sc-if value="{{b.liked}}" hint-placeholder-val="{{ false }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="#E07A7A" aria-hidden="true" style="margin-left: 4px"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"></path></svg></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{b.unrated}}" hint-placeholder-val="{{ false }}">
+<button style="align-self: flex-start; height: 28px; padding: 0 12px; border-radius: 14px; border: 1px solid {{accent}}; background: transparent; color: {{accent}}; font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; cursor: pointer">Rate</button>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+
+</div>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: rgba(17,17,19,0.94); border-top: 1px solid #26262B; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 8px 8px 20px 8px; box-sizing: border-box">
+<a href="Home.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{accent}}; font-size: 11px; font-weight: 600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</a>
+<a href="Discover.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M2 6v12M22 6v12"></path></svg>Discover</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="9" rx="1"></rect><rect x="3" y="15" width="7" height="6" rx="1"></rect><rect x="14" y="15" width="7" height="6" rx="1"></rect></svg>My books</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>Search</a>
+</nav>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#D9B46A","options":["#D9B46A","#8FB8C9","#C99AC4","#9DC08B"]},"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mk = (r, liked) => {
+      const stars = [1, 2, 3, 4, 5].map((i) => ({ on: i <= r, off: i > r }));
+      return { stars: stars, rated: r > 0, unrated: r === 0, liked: !!liked, label: r > 0 ? r + ' out of 5 stars' : 'Not rated' };
+    };
+    return {
+      accent: this.props.accent ?? '#D9B46A',
+      reading: [
+        { title: 'Prophet Song', short: 'Lynch', author: 'Paul Lynch', format: 'Print', color: '#7A2E2A' },
+        { title: 'Roadside Picnic', short: 'Strugatsky', author: 'Arkady & Boris Strugatsky', format: 'Audio', color: '#3E5A4A' }
+      ],
+      tbr: [
+        { title: 'The Sympathizer', author: 'Viet Thanh Nguyen', color: '#8A5A1E' },
+        { title: 'Klara and the Sun', author: 'Kazuo Ishiguro', color: '#2F5C7A' },
+        { title: 'Normal People', author: 'Sally Rooney', color: '#5E6B3B' },
+        { title: 'The Player of Games', author: 'Iain M. Banks', color: '#3B3A6B' },
+        { title: 'Jonathan Strange & Mr Norrell', author: 'Susanna Clarke', color: '#4A3A2E' }
+      ],
+      recent: [
+        Object.assign({ title: 'A Memory Called Empire', author: 'Arkady Martine', color: '#5A2E5C' }, mk(0)),
+        Object.assign({ title: 'Intermezzo', author: 'Sally Rooney', color: '#2E4F5C' }, mk(5, true)),
+        Object.assign({ title: 'James', author: 'Percival Everett', color: '#6B4A2A' }, mk(5, true)),
+        Object.assign({ title: 'Yellowface', author: 'R. F. Kuang', color: '#7A6A1E' }, mk(5)),
+        Object.assign({ title: 'Babel', author: 'R. F. Kuang', color: '#3A4A6B' }, mk(4))
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

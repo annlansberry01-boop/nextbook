@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Next Book: Discover carousel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#111113}
+a{color:#D9B46A}a:hover{color:#EBCB8B}
+.row::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #111113; color: #F2EFE9; font-family: Inter, system-ui, sans-serif; box-sizing: border-box">
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 20px 0 0 0">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 0 20px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Discover</h1>
+<div style="display: flex; padding: 3px; border-radius: 22px; background: #1B1B1F; border: 1px solid #2E2E34">
+<a href="Discover.dc.html" aria-current="page" style="height: 36px; padding: 0 14px; border-radius: 18px; background: #2E2E34; color: #F2EFE9; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center">Backfill</a>
+<a href="NextRead.dc.html" style="height: 36px; padding: 0 14px; border-radius: 18px; color: #A7A39B; font-size: 13px; font-weight: 500; text-decoration: none; display: flex; align-items: center">Next read</a>
+</div>
+</header>
+
+<div class="row" role="group" aria-label="Deck themes" style="display: flex; gap: 8px; overflow-x: auto; padding: 0 20px; scrollbar-width: none">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="6">
+<button aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="flex: none; height: 38px; padding: 0 14px; border-radius: 19px; border: 1px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: Inter, sans-serif; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer">{{c.label}}</button>
+</sc-for>
+<button style="flex: none; height: 38px; padding: 0 14px; border-radius: 19px; border: 1px dashed #4A4A52; background: transparent; color: #CFCBC3; font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Make a deck</button>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 4px 0 0 0">
+<div style="font-size: 12px; font-weight: 500; color: #A7A39B; letter-spacing: 0.02em">{{deckName}} · Card {{num}} of 15</div>
+<div role="group" aria-label="Book carousel" style="position: relative; width: 390px; height: 230px; overflow: hidden; perspective: 640px; perspective-origin: 50% 50%">
+<sc-for list="{{strip}}" as="c" hint-placeholder-count="7">
+<button aria-label="{{c.aria}}" onClick="{{c.pick}}" style="position: absolute; left: 50%; top: 50%; width: 80px; height: 120px; margin: -60px 0 0 -40px; padding: 0; border: none; border-radius: 10px; background: {{c.color}}; cursor: pointer; transform: {{c.transform}}; z-index: {{c.z}}; box-shadow: {{c.shadow}}; transition: transform 0.35s ease, box-shadow 0.35s ease; display: flex; flex-direction: column; justify-content: space-between; text-align: left; color: #F2EFE9; box-sizing: border-box; padding: 9px; overflow: hidden; filter: brightness({{c.bright}})">
+<span style="display: block; font-family: 'Space Grotesk', sans-serif; font-size: 11.5px; font-weight: 700; line-height: 1.08">{{c.title}}</span>
+<span style="display: block">
+<span style="display: block; height: 1px; background: rgba(242,239,233,0.35); margin-bottom: 5px"></span>
+<span style="display: block; font-family: Inter, sans-serif; font-size: 6px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600">{{c.author}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 0 20px">
+<div style="font-size: 19px; font-weight: 600">{{card.title}}</div>
+<div style="font-size: 14px; color: #A7A39B">{{card.author}} · {{card.year}}</div>
+<div style="margin-top: 4px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #241F15; color: {{accent}}">{{card.why}}</div>
+</div>
+</div>
+
+<div style="position: relative; height: 22px">
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 999px; background: #26262B; color: #E6E2DA; white-space: nowrap">{{toast}}</div>
+</sc-if>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0 20px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<button aria-label="Not read" onClick="{{notRead}}" style="width: 58px; height: 58px; border-radius: 29px; border: 1px solid #3A3A41; background: #1B1B1F; color: #E6E2DA; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+<div style="font-size: 11px; color: #A7A39B; text-align: center">Not read<br>← swipe</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<button aria-label="Started, didn't finish" onClick="{{dnf}}" style="width: 58px; height: 58px; border-radius: 29px; border: 1px solid #3A3A41; background: #1B1B1F; color: #E6E2DA; font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer">DNF</button>
+<div style="font-size: 11px; color: #A7A39B; text-align: center">Didn't finish<br>tap</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<button aria-label="Add to TBR" onClick="{{tbr}}" style="width: 58px; height: 58px; border-radius: 29px; border: 1px solid #3A3A41; background: #1B1B1F; color: #E6E2DA; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"></path></svg></button>
+<div style="font-size: 11px; color: #A7A39B; text-align: center">TBR<br>↑ swipe</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<button aria-label="Read it" onClick="{{openRate}}" style="width: 58px; height: 58px; border-radius: 29px; border: none; background: {{accent}}; color: #1A1406; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></button>
+<div style="font-size: 11px; color: #A7A39B; text-align: center">Read it<br>swipe →</div>
+</div>
+</div>
+
+</div>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: rgba(17,17,19,0.94); border-top: 1px solid #26262B; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 8px 8px 20px 8px; box-sizing: border-box">
+<a href="Home.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</a>
+<a href="Discover.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{accent}}; font-size: 11px; font-weight: 600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M2 6v12M22 6v12"></path></svg>Discover</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="9" rx="1"></rect><rect x="3" y="15" width="7" height="6" rx="1"></rect><rect x="14" y="15" width="7" height="6" rx="1"></rect></svg>My books</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>Search</a>
+</nav>
+
+<sc-if value="{{sheetOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.62); display: flex; flex-direction: column; justify-content: flex-end">
+<div role="dialog" aria-label="Rate this book" style="background: #1B1B1F; border-radius: 22px 22px 0 0; padding: 12px 20px 32px 20px; display: flex; flex-direction: column; gap: 20px; border-top: 1px solid #2E2E34">
+<div style="align-self: center; width: 40px; height: 4px; border-radius: 2px; background: #3A3A41"></div>
+<div style="display: flex; gap: 14px; align-items: center">
+<div style="width: 48px; height: 72px; flex: none; border-radius: 4px; background: {{card.color}}"></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+<div style="font-size: 17px; font-weight: 600">{{card.title}}</div>
+<div style="font-size: 13px; color: #A7A39B">{{card.author}}</div>
+</div>
+<button aria-label="Like" aria-pressed="{{likedPressed}}" onClick="{{toggleLike}}" style="width: 44px; height: 44px; border-radius: 22px; border: 1px solid #3A3A41; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="{{heartFill}}" stroke="{{heartStroke}}" stroke-width="1.8" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"></path></svg></button>
+</div>
+
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+<div role="group" aria-label="Rating" style="display: flex; gap: 6px">
+<sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
+<button aria-label="{{s.label}}" onClick="{{s.tap}}" style="width: 48px; height: 48px; border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<span style="position: relative; width: 38px; height: 38px; display: block">
+<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#5A5A62" stroke-width="1.4" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"></path></svg>
+<span style="position: absolute; left: 0; top: 0; height: 38px; width: {{s.width}}; overflow: hidden; display: block">
+<svg width="38" height="38" viewBox="0 0 24 24" fill="{{accent}}" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"></path></svg>
+</span>
+</span>
+</button>
+</sc-for>
+</div>
+<div style="font-size: 12px; color: #A7A39B">{{ratingText}}</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 600; color: #CFCBC3">Roughly when?</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{decades}}" as="d" hint-placeholder-count="6">
+<button aria-pressed="{{d.pressed}}" onClick="{{d.pick}}" style="height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer">{{d.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{showYear}}" hint-placeholder-val="{{ false }}">
+<a href="#" style="font-size: 13px; font-weight: 500; text-decoration: none">Add the exact year (optional)</a>
+</sc-if>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #CFCBC3">Note (optional)
+<input type="text" placeholder="One line on what stayed with you" style="height: 44px; border-radius: 12px; border: 1px solid #3A3A41; background: #141416; color: #F2EFE9; padding: 0 14px; font-family: Inter, sans-serif; font-size: 14px; font-weight: 400">
+</label>
+
+<div style="display: flex; gap: 10px">
+<button onClick="{{closeSheet}}" style="flex: 1; height: 50px; border-radius: 25px; border: 1px solid #3A3A41; background: transparent; color: #F2EFE9; font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">Cancel</button>
+<button onClick="{{save}}" style="flex: 2; height: 50px; border-radius: 25px; border: none; background: {{accent}}; color: #1A1406; font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">Save to my books</button>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#D9B46A","options":["#D9B46A","#8FB8C9","#C99AC4","#9DC08B"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { chip: 'foryou', idx: 0, sheet: false, rating: 0, decade: null, liked: false, toast: '' };
+  }
+  decks() {
+    return {
+      foryou: [
+        { title: 'Amsterdam', author: 'Ian McEwan', year: '1998', why: 'Another McEwan', color: '#2F4A5E' },
+        { title: 'The Night Watch', author: 'Sarah Waters', year: '2006', why: 'Another Sarah Waters', color: '#4A2E3A' },
+        { title: 'Hogfather', author: 'Terry Pratchett', year: '1996', why: 'More Discworld', color: '#5C2A2A' },
+        { title: 'The Lathe of Heaven', author: 'Ursula K. Le Guin', year: '1971', why: 'Close to your 5-star Le Guin', color: '#2E5048' },
+        { title: 'The Sense of an Ending', author: 'Julian Barnes', year: '2011', why: 'Booker Prize 2011', color: '#5E5236' },
+        { title: 'The Robber Bride', author: 'Margaret Atwood', year: '1993', why: 'Another Atwood', color: '#6B3A2E' }
+      ],
+      booker: [
+        { title: 'Possession', author: 'A. S. Byatt', year: '1990', why: 'Booker Prize 1990', color: '#3A4A2E' },
+        { title: 'Amsterdam', author: 'Ian McEwan', year: '1998', why: 'Booker Prize 1998', color: '#2F4A5E' },
+        { title: 'Life of Pi', author: 'Yann Martel', year: '2001', why: 'Booker Prize 2002', color: '#2E5A5E' },
+        { title: 'The Line of Beauty', author: 'Alan Hollinghurst', year: '2004', why: 'Booker Prize 2004', color: '#5A3A5E' },
+        { title: 'The Sense of an Ending', author: 'Julian Barnes', year: '2011', why: 'Booker Prize 2011', color: '#5E5236' }
+      ],
+      scifi: [
+        { title: 'Solaris', author: 'Stanisław Lem', year: '1961', why: 'Sci-fi classic', color: '#1E3A5C' },
+        { title: 'Childhood’s End', author: 'Arthur C. Clarke', year: '1953', why: 'Sci-fi classic', color: '#4A2E5C' },
+        { title: 'The Stars My Destination', author: 'Alfred Bester', year: '1956', why: 'Sci-fi classic', color: '#5C3A1E' },
+        { title: 'Rendezvous with Rama', author: 'Arthur C. Clarke', year: '1973', why: 'Sci-fi classic', color: '#2E4A3A' },
+        { title: 'The Lathe of Heaven', author: 'Ursula K. Le Guin', year: '1971', why: 'Sci-fi classic', color: '#2E5048' }
+      ],
+      '90s': [
+        { title: 'The Robber Bride', author: 'Margaret Atwood', year: '1993', why: '90s', color: '#6B3A2E' },
+        { title: 'Captain Corelli’s Mandolin', author: 'Louis de Bernières', year: '1994', why: '90s bestseller', color: '#2E4A6B' },
+        { title: 'Hogfather', author: 'Terry Pratchett', year: '1996', why: '90s', color: '#5C2A2A' },
+        { title: 'Memoirs of a Geisha', author: 'Arthur Golden', year: '1997', why: '90s bestseller', color: '#6B2E4A' },
+        { title: 'Amsterdam', author: 'Ian McEwan', year: '1998', why: '90s', color: '#2F4A5E' }
+      ]
+    };
+  }
+  next(msg) {
+    this.setState({ idx: this.state.idx + 1, sheet: false, toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: '' }), 1800);
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    const accent = this.props.accent ?? '#D9B46A';
+    const s = this.state;
+    const all = this.decks();
+    const deck = all[s.chip] || all.foryou;
+    const mod = (n, m) => ((n % m) + m) % m;
+    const card = deck[mod(s.idx, deck.length)];
+    const nextCard = deck[mod(s.idx + 1, deck.length)];
+    const xs = [0, 64, 108, 146];
+    const zs = [0, 18, 40, 64];
+    const rots = [0, 14, 26, 34];
+    const strip = [-3, -2, -1, 0, 1, 2, 3].map((o) => {
+      const b = deck[mod(s.idx + o, deck.length)];
+      const a = Math.abs(o);
+      const sign = o < 0 ? -1 : 1;
+      const x = sign * xs[a];
+      const rot = -sign * rots[a];
+      const centre = o === 0;
+      return {
+        title: b.title, author: b.author, color: b.color,
+        aria: centre ? b.title + ' by ' + b.author + ', current card' : 'Move to ' + b.title,
+        transform: 'translateX(' + x + 'px) translateZ(' + zs[a] + 'px) rotateY(' + rot + 'deg)' + (centre ? ' scale(1.35)' : ''),
+        z: 10 - a,
+        bright: centre ? 1 : (a === 1 ? 0.72 : 0.5),
+        shadow: centre ? '0 0 0 2px ' + accent + ', 0 22px 48px rgba(0,0,0,0.7)' : '0 14px 30px rgba(0,0,0,0.55)',
+        pick: () => { if (o !== 0) this.setState({ idx: s.idx + o, toast: '' }); }
+      };
+    });
+    const chipDefs = [
+      ['foryou', 'For you'], ['top250', 'Top 250'], ['90s', '90s'], ['booker', 'Booker'],
+      ['scifi', 'Sci-fi classics'], ['women', 'Women authors'], ['lgbt', 'LGBTIQA+']
+    ];
+    const chips = chipDefs.map(([id, label]) => {
+      const on = s.chip === id;
+      return {
+        label: label, pressed: on ? 'true' : 'false',
+        bg: on ? '#F2EFE9' : '#1B1B1F', fg: on ? '#111113' : '#CFCBC3', border: on ? '#F2EFE9' : '#2E2E34',
+        pick: () => this.setState({ chip: id, idx: 0, toast: '' })
+      };
+    });
+    const deckName = (chipDefs.find((c) => c[0] === s.chip) || chipDefs[0])[1];
+    const stars = [1, 2, 3, 4, 5].map((i) => {
+      const w = s.rating >= i ? '38px' : (s.rating === i - 0.5 ? '19px' : '0px');
+      return {
+        width: w, label: i + ' stars',
+        tap: () => this.setState({ rating: s.rating === i ? i - 0.5 : i })
+      };
+    });
+    const decades = ['1980s', '1990s', '2000s', '2010s', '2020s', 'Not sure'].map((d) => {
+      const on = s.decade === d;
+      return {
+        label: d, pressed: on ? 'true' : 'false',
+        bg: on ? '#2A2416' : 'transparent', fg: on ? accent : '#CFCBC3', border: on ? accent : '#3A3A41',
+        pick: () => this.setState({ decade: d })
+      };
+    });
+    const ratingText = s.rating > 0
+      ? s.rating + ' out of 5' + (s.liked ? ' · liked' : '')
+      : 'Tap a star. Tap again for a half.';
+    return {
+      accent: accent,
+      chips: chips, deckName: deckName,
+      card: card, nextColor: nextCard.color, num: mod(s.idx, 15) + 1, strip: strip,
+      hasToast: !!s.toast, toast: s.toast,
+      notRead: () => this.next('Won’t show this again'),
+      dnf: () => this.next('Logged as DNF'),
+      tbr: () => this.next('Added to TBR'),
+      openRate: () => this.setState({ sheet: true, rating: 0, decade: null, liked: false }),
+      sheetOpen: s.sheet,
+      stars: stars, ratingText: ratingText,
+      decades: decades, showYear: !!s.decade && s.decade !== 'Not sure',
+      likedPressed: s.liked ? 'true' : 'false',
+      heartFill: s.liked ? '#E07A7A' : 'none', heartStroke: s.liked ? '#E07A7A' : '#A7A39B',
+      toggleLike: () => this.setState({ liked: !s.liked }),
+      closeSheet: () => this.setState({ sheet: false }),
+      save: () => this.next(s.rating > 0 ? 'Logged · ' + s.rating + ' stars' : 'Logged as read')
+    };
+  }
+}
+</script>
+</body>
+</html>

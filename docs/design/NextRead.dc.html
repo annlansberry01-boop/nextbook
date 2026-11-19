@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Next Book: Next read</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#111113}
+a{color:#D9B46A}a:hover{color:#EBCB8B}
+.scroll::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #111113; color: #F2EFE9; font-family: Inter, system-ui, sans-serif; box-sizing: border-box">
+
+<div class="scroll" style="position: absolute; left: 0; right: 0; top: 0; bottom: 84px; overflow-y: auto; scrollbar-width: none">
+<div style="display: flex; flex-direction: column; gap: 20px; padding: 20px 20px 32px 20px">
+
+<header style="display: flex; align-items: center; justify-content: space-between">
+<h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Discover</h1>
+<div style="display: flex; padding: 3px; border-radius: 22px; background: #1B1B1F; border: 1px solid #2E2E34">
+<a href="Discover.dc.html" style="height: 36px; padding: 0 14px; border-radius: 18px; color: #A7A39B; font-size: 13px; font-weight: 500; text-decoration: none; display: flex; align-items: center">Backfill</a>
+<a href="NextRead.dc.html" aria-current="page" style="height: 36px; padding: 0 14px; border-radius: 18px; background: #2E2E34; color: #F2EFE9; font-size: 13px; font-weight: 600; text-decoration: none; display: flex; align-items: center">Next read</a>
+</div>
+</header>
+
+<sc-if value="{{onMood}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600">What are you in the mood for?</h2>
+<p style="margin: 0; font-size: 14px; color: #A7A39B">All optional. Or skip it and let the app surprise you.</p>
+</div>
+<button onClick="{{surprise}}" style="height: 48px; border-radius: 24px; border: 1px solid {{accent}}; background: #1E1C18; color: {{accent}}; font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"></path></svg>Surprise me</button>
+<div style="display: flex; align-items: center; gap: 12px; color: #6E6A63; font-size: 12px"><div style="flex: 1; height: 1px; background: #2E2E34"></div>or set the mood<div style="flex: 1; height: 1px; background: #2E2E34"></div></div>
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+<div role="group" aria-label="{{g.name}}" style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; font-weight: 600; color: #CFCBC3">{{g.name}}</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{g.opts}}" as="o" hint-placeholder-count="3">
+<button aria-pressed="{{o.pressed}}" onClick="{{o.pick}}" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid {{o.border}}; background: {{o.bg}}; color: {{o.fg}}; font-family: Inter, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer">{{o.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{g.hasNote}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 12px; color: #A7A39B">{{g.note}}</div>
+</sc-if>
+</div>
+</sc-for>
+<button onClick="{{showPicks}}" style="height: 52px; border-radius: 26px; border: none; background: {{accent}}; color: #1A1406; font-family: Inter, sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 4px">Show my picks</button>
+</div>
+</sc-if>
+
+<sc-if value="{{onPicks}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600">Seven for you</h2>
+<p style="margin: 0; font-size: 13px; color: #A7A39B">{{moodSummary}}</p>
+</div>
+<button onClick="{{backToMood}}" style="flex: none; height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid #3A3A41; background: transparent; color: #CFCBC3; font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer">Change mood</button>
+</div>
+
+<div role="group" aria-label="Your picks" style="position: relative; width: 390px; height: 230px; margin: 0 -20px; overflow: hidden; perspective: 640px">
+<sc-for list="{{strip}}" as="c" hint-placeholder-count="7">
+<button aria-label="{{c.aria}}" onClick="{{c.pick}}" style="position: absolute; left: 50%; top: 50%; width: 80px; height: 120px; margin: -60px 0 0 -40px; border: none; border-radius: 10px; background: {{c.color}}; cursor: pointer; transform: {{c.transform}}; z-index: {{c.z}}; box-shadow: {{c.shadow}}; transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease; opacity: {{c.opacity}}; filter: brightness({{c.bright}}); display: flex; flex-direction: column; justify-content: space-between; text-align: left; color: #F2EFE9; box-sizing: border-box; padding: 9px; overflow: hidden">
+<span style="display: block; font-family: 'Space Grotesk', sans-serif; font-size: 11.5px; font-weight: 700; line-height: 1.08">{{c.title}}</span>
+<span style="display: block">
+<span style="display: block; height: 1px; background: rgba(242,239,233,0.35); margin-bottom: 5px"></span>
+<span style="display: block; font-family: Inter, sans-serif; font-size: 6px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600">{{c.author}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+
+<div style="display: flex; justify-content: center; gap: 8px" aria-hidden="true">
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="7">
+<span style="width: {{d.w}}; height: 6px; border-radius: 3px; background: {{d.bg}}; display: block; transition: width 0.3s ease"></span>
+</sc-for>
+</div>
+
+<article style="display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 18px; background: #1B1B1F; border: 1px solid #26262B; opacity: {{cur.opacity}}">
+<div style="display: flex; flex-direction: column; gap: 5px; align-items: center; text-align: center">
+<span style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: {{cur.tagBg}}; color: {{cur.tagFg}}">{{cur.tag}}</span>
+<div style="font-size: 19px; font-weight: 600; line-height: 1.2">{{cur.title}}</div>
+<div style="font-size: 13px; color: #A7A39B">{{cur.author}} · {{cur.meta}}</div>
+<div style="font-size: 14px; line-height: 1.45; color: #E6E2DA; margin-top: 4px">{{cur.reason}}</div>
+</div>
+
+<button aria-expanded="{{cur.expanded}}" onClick="{{cur.toggle}}" style="align-self: center; height: 32px; padding: 0; border: none; background: transparent; color: {{accent}}; font-family: Inter, sans-serif; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; cursor: pointer">Why this pick<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="transform: rotate({{cur.chev}})"><path d="M6 9l6 6 6-6"></path></svg></button>
+
+<sc-if value="{{cur.open}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 12px; background: #141416">
+<div style="display: flex; gap: 14px; font-size: 11px; color: #A7A39B">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 4px; border-radius: 2px; background: {{accent}}; display: block"></span>This book</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 4px; border-radius: 2px; background: #6E6A63; display: block"></span>Your 5-star books</span>
+</div>
+<sc-for list="{{cur.dims}}" as="d" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 12px; color: #CFCBC3">{{d.name}}</div>
+<div style="height: 4px; border-radius: 2px; background: #26262B; overflow: hidden"><div style="height: 4px; width: {{d.book}}; background: {{accent}}"></div></div>
+<div style="height: 4px; border-radius: 2px; background: #26262B; overflow: hidden"><div style="height: 4px; width: {{d.you}}; background: #6E6A63"></div></div>
+</div>
+</sc-for>
+<div style="font-size: 12px; line-height: 1.45; color: #A7A39B">{{cur.because}}</div>
+</div>
+</sc-if>
+
+<div style="display: flex; gap: 8px">
+<button onClick="{{cur.start}}" style="flex: 1.3; height: 44px; border-radius: 22px; border: none; background: {{accent}}; color: #1A1406; font-family: Inter, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer">Start reading</button>
+<sc-if value="{{cur.isNew}}" hint-placeholder-val="{{ false }}">
+<button onClick="{{cur.save}}" style="flex: 1; height: 44px; border-radius: 22px; border: 1px solid #3A3A41; background: transparent; color: #F2EFE9; font-family: Inter, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer">Add to TBR</button>
+</sc-if>
+<button onClick="{{cur.skip}}" style="flex: 1; height: 44px; border-radius: 22px; border: 1px solid #3A3A41; background: transparent; color: #CFCBC3; font-family: Inter, sans-serif; font-size: 14px; font-weight: 500; cursor: pointer">Not for me</button>
+</div>
+</article>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: 50%; bottom: 100px; transform: translateX(-50%); font-size: 13px; font-weight: 500; padding: 8px 14px; border-radius: 999px; background: #2E2E34; color: #F2EFE9; white-space: nowrap; box-shadow: 0 8px 20px rgba(0,0,0,0.5)">{{toast}}</div>
+</sc-if>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: rgba(17,17,19,0.96); border-top: 1px solid #26262B; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 8px 8px 20px 8px; box-sizing: border-box">
+<a href="Home.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Home</a>
+<a href="Discover.dc.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{accent}}; font-size: 11px; font-weight: 600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M2 6v12M22 6v12"></path></svg>Discover</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="9" rx="1"></rect><rect x="3" y="15" width="7" height="6" rx="1"></rect><rect x="14" y="15" width="7" height="6" rx="1"></rect></svg>My books</a>
+<a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #A7A39B; font-size: 11px; font-weight: 500"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>Search</a>
+</nav>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#D9B46A","options":["#D9B46A","#8FB8C9","#C99AC4","#9DC08B"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      step: 'mood', open: null, skipped: {}, toast: '', cur: 0,
+      appetite: 'Something different', genres: ['Literary', 'Contemporary'], weight: 'Medium', format: 'Print', length: 'Any'
+    };
+  }
+  say(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: '' }), 1800);
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    const accent = this.props.accent ?? '#D9B46A';
+    const s = this.state;
+    const opt = (label, on, pick) => ({
+      label: label, pressed: on ? 'true' : 'false', pick: pick,
+      bg: on ? '#2A2416' : 'transparent', fg: on ? accent : '#CFCBC3', border: on ? accent : '#3A3A41'
+    });
+    const single = (key, list) => list.map((l) => opt(l, s[key] === l, () => this.setState({ [key]: l })));
+    const genreList = ['Sci-fi', 'Contemporary', 'Literary', 'Gothic', 'Historical', 'Comic'];
+    const groups = [
+      { name: 'Appetite', opts: single('appetite', ['Like my recent reads', 'Something different']), hasNote: true, note: s.appetite === 'Like my recent reads' ? 'Close to the profile of your last few books.' : 'Steps away from your last few books, still within your taste.' },
+      { name: 'Genres', opts: genreList.map((g) => opt(g, s.genres.indexOf(g) > -1, () => {
+          const has = s.genres.indexOf(g) > -1;
+          this.setState({ genres: has ? s.genres.filter((x) => x !== g) : s.genres.concat([g]) });
+        })), hasNote: false, note: '' },
+      { name: 'Weight', opts: single('weight', ['Light', 'Medium', 'Heavy']), hasNote: false, note: '' },
+      { name: 'Format', opts: single('format', ['Print', 'Ebook', 'Audio']), hasNote: s.format === 'Audio', note: 'Audiobooks capped at 12 hours.' },
+      { name: 'Length', opts: single('length', ['Short', 'Any', 'Long']), hasNote: false, note: '' }
+    ];
+    const base = [
+      { id: 'symp', title: 'The Sympathizer', author: 'Viet Thanh Nguyen', meta: '2015', color: '#8A5A1E', isNew: false,
+        reason: 'Power and identity with dark wit. Your early read called the language sublime.',
+        dims: [['Ideas density', '86%', '82%'], ['Structural ambition', '80%', '74%'], ['Warmth & wit', '62%', '66%'], ['Social consciousness', '94%', '78%']],
+        because: 'Closest to: Erasure (5), James (5), The Ministry of Time (5).' },
+      { id: 'klara', title: 'Klara and the Sun', author: 'Kazuo Ishiguro', meta: '2021', color: '#2F5C7A', isNew: false,
+        reason: 'Quiet, warm, and asks what it means to be conscious. Your last Ishiguro, Never Let Me Go, was a 5.',
+        dims: [['Ideas density', '72%', '82%'], ['Structural ambition', '58%', '74%'], ['Warmth & wit', '74%', '66%'], ['Social consciousness', '60%', '78%']],
+        because: 'Closest to: Never Let Me Go (5), Exhalation (5), The Remains of the Day (4).' },
+      { id: 'bardo', title: 'Lincoln in the Bardo', author: 'George Saunders', meta: '2017 · Booker Prize', color: '#4A3A5C', isNew: true,
+        reason: 'Big structural swing with earned warmth: a novel told by a chorus of ghosts.',
+        dims: [['Ideas density', '78%', '82%'], ['Structural ambition', '96%', '74%'], ['Warmth & wit', '80%', '66%'], ['Social consciousness', '66%', '78%']],
+        because: 'Closest to: Piranesi (5), Cloudstreet (4), Small Gods (5).' },
+      { id: 'strange', title: 'Jonathan Strange & Mr Norrell', author: 'Susanna Clarke', meta: '2004', color: '#4A3A2E', isNew: false,
+        reason: 'The big, witty, footnoted precursor to Piranesi, which you gave a 5.',
+        dims: [['Ideas density', '74%', '82%'], ['Structural ambition', '84%', '74%'], ['Warmth & wit', '88%', '66%'], ['Social consciousness', '48%', '78%']],
+        because: 'Closest to: Piranesi (5), Wolf Hall (5), Small Gods (5).' },
+      { id: 'bee', title: 'The Bee Sting', author: 'Paul Murray', meta: '2023 · Booker shortlist', color: '#6B5A1E', isNew: true,
+        reason: 'A family coming apart, told from four angles with dark comedy and real warmth.',
+        dims: [['Ideas density', '64%', '82%'], ['Structural ambition', '82%', '74%'], ['Warmth & wit', '86%', '66%'], ['Social consciousness', '70%', '78%']],
+        because: 'Closest to: Intermezzo (5), My Friends (5), White Teeth (5).' },
+      { id: 'normal', title: 'Normal People', author: 'Sally Rooney', meta: '2018', color: '#5E6B3B', isNew: false,
+        reason: 'Shorter and sharper than Intermezzo, which you rated 5.',
+        dims: [['Ideas density', '58%', '82%'], ['Structural ambition', '52%', '74%'], ['Warmth & wit', '64%', '66%'], ['Social consciousness', '72%', '78%']],
+        because: 'Closest to: Intermezzo (5), Atonement (5), On Chesil Beach (4).' },
+      { id: 'player', title: 'The Player of Games', author: 'Iain M. Banks', meta: '1988', color: '#3B3A6B', isNew: false,
+        reason: 'A game that is really a critique of empire. A tighter way into the Culture than the series as a whole.',
+        dims: [['Ideas density', '84%', '82%'], ['Structural ambition', '62%', '74%'], ['Warmth & wit', '60%', '66%'], ['Social consciousness', '86%', '78%']],
+        because: 'Closest to: The Dispossessed (5), Ancillary Justice (5), The Left Hand of Darkness (5).' }
+    ];
+    const picks = base.map((b, i) => {
+      const open = s.open === b.id;
+      const gone = !!s.skipped[b.id];
+      return Object.assign({}, b, {
+        tag: b.isNew ? 'New to you' : 'From your TBR',
+        tagBg: b.isNew ? '#1E2A2E' : '#2A2416', tagFg: b.isNew ? '#9CC7D4' : accent,
+        open: open, expanded: open ? 'true' : 'false', chev: open ? '180deg' : '0deg',
+        opacity: gone ? 0.4 : 1,
+        dims: b.dims.map((d) => ({ name: d[0], book: d[1], you: d[2] })),
+        toggle: () => this.setState({ open: open ? null : b.id }),
+        start: () => this.say('Moved to Currently reading'),
+        save: () => this.say('Added to TBR'),
+        skip: () => { const k = Object.assign({}, s.skipped); k[b.id] = true; this.setState({ skipped: k, open: null, cur: (i + 1) % base.length }); this.say('Got it. Won’t suggest it again'); }
+      });
+    });
+    const bits = [s.appetite, s.genres.join(' + '), s.weight, s.format].filter((x) => x);
+    return {
+      accent: accent,
+      onMood: s.step === 'mood', onPicks: s.step === 'picks',
+      groups: groups,
+      showPicks: () => this.setState({ step: 'picks', open: null, skipped: {}, surprised: false, cur: 0 }),
+      surprise: () => this.setState({ step: 'picks', open: null, skipped: {}, surprised: true, cur: 0 }),
+      backToMood: () => this.setState({ step: 'mood' }),
+      moodSummary: s.surprised ? 'Surprise me: no filters, some wildcards' : bits.join(' · '),
+      picks: picks,
+      cur: picks[s.cur],
+      dots: picks.map((p, i) => ({ w: i === s.cur ? '22px' : '6px', bg: i === s.cur ? accent : '#3A3A41' })),
+      strip: [-3, -2, -1, 0, 1, 2, 3].map((o) => {
+        const n = picks.length;
+        const i = ((s.cur + o) % n + n) % n;
+        const p = picks[i];
+        const a = Math.abs(o);
+        const sign = o < 0 ? -1 : 1;
+        const centre = o === 0;
+        const x = sign * [0, 64, 108, 146][a];
+        const z = [0, 18, 40, 64][a];
+        const rot = -sign * [0, 14, 26, 34][a];
+        return {
+          title: p.title, author: p.author, color: p.color,
+          aria: centre ? p.title + ', current pick' : 'Show ' + p.title,
+          transform: 'translateX(' + x + 'px) translateZ(' + z + 'px) rotateY(' + rot + 'deg)' + (centre ? ' scale(1.35)' : ''),
+          z: 10 - a,
+          bright: centre ? 1 : (a === 1 ? 0.72 : 0.5),
+          opacity: p.opacity,
+          shadow: centre ? '0 0 0 2px ' + accent + ', 0 22px 48px rgba(0,0,0,0.7)' : '0 14px 30px rgba(0,0,0,0.55)',
+          pick: () => this.setState({ cur: i, open: null })
+        };
+      }),
+      hasToast: !!s.toast, toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
