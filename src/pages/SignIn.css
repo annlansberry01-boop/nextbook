@@ -1,0 +1,118 @@
+.signin {
+  min-height: 100dvh;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: calc(64px + env(safe-area-inset-top)) var(--gutter) 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.signin-stack {
+  position: relative;
+  width: 112px;
+  height: 84px;
+  margin-bottom: 16px;
+}
+
+.signin-stack div {
+  position: absolute;
+  width: 48px;
+  height: 72px;
+  border-radius: 4px;
+  box-shadow: var(--shadow-cover);
+}
+
+.signin-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.signin-lede {
+  margin: 0 0 20px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signin-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.signin-form input {
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px; /* 16px stops iPhone zooming in on focus */
+}
+
+.signin-form input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.primary-btn {
+  height: 48px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 24px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.signin-hint {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.signin-error {
+  margin: 0;
+  font-size: 14px;
+  color: var(--like);
+}
+
+.signin-sent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 18px;
+  background: var(--feature-bg);
+  border: 1px solid var(--feature-border);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.link-btn {
+  align-self: flex-start;
+  min-height: var(--tap);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}

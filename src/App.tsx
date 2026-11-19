@@ -1,11 +1,17 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import TabBar from './components/TabBar'
+import { AuthProvider, useAuth } from './lib/auth'
 import Home from './pages/Home'
 import Discover from './pages/Discover'
 import MyBooks from './pages/MyBooks'
 import Search from './pages/Search'
+import SignIn from './pages/SignIn'
 
-export default function App() {
+function Shell() {
+  const { session, loading } = useAuth()
+  if (loading) return null
+  if (!session) return <SignIn />
+
   return (
     <BrowserRouter>
       <Routes>
@@ -16,5 +22,13 @@ export default function App() {
       </Routes>
       <TabBar />
     </BrowserRouter>
+  )
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Shell />
+    </AuthProvider>
   )
 }
