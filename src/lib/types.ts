@@ -1,6 +1,6 @@
 export type ReadingStatus = 'reading' | 'read' | 'dnf'
 export type BookFormat = 'print' | 'ebook' | 'audio'
-export type DatePrecision = 'exact' | 'year' | 'decade' | 'unknown'
+export type DatePrecision = 'exact' | 'month' | 'year' | 'decade' | 'unknown'
 
 export type Book = {
   id: string

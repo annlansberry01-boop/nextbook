@@ -290,3 +290,21 @@
 .btn-primary:disabled {
   opacity: 0.6;
 }
+
+/* 'Pick a day' chip opens the phone's own date picker from a hidden input. */
+.date-chip {
+  position: relative;
+  display: inline-flex;
+}
+
+.date-chip input {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
+}

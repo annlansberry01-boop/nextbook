@@ -4,6 +4,7 @@ import type { Book, BookFormat, Reading } from './types'
 
 export type DateChoice =
   | { precision: 'exact'; date: string } // yyyy-mm-dd
+  | { precision: 'month'; year: number; month: number } // month 1-12
   | { precision: 'year'; year: number }
   | { precision: 'decade'; decade: number }
   | { precision: 'unknown' }
@@ -28,6 +29,11 @@ export function dateFields(c: DateChoice) {
   switch (c.precision) {
     case 'exact':
       return { finished_from: c.date, finished_to: c.date, date_precision: 'exact' as const }
+    case 'month': {
+      const mm = String(c.month).padStart(2, '0')
+      const last = new Date(c.year, c.month, 0).getDate()
+      return { finished_from: `${c.year}-${mm}-01`, finished_to: `${c.year}-${mm}-${last}`, date_precision: 'month' as const }
+    }
     case 'year':
       return { finished_from: `${c.year}-01-01`, finished_to: `${c.year}-12-31`, date_precision: 'year' as const }
     case 'decade':
@@ -42,6 +48,8 @@ export function dateChoiceOf(r: Pick<Reading, 'finished_from' | 'date_precision'
   switch (r.date_precision) {
     case 'exact':
       return { precision: 'exact', date: r.finished_from! }
+    case 'month':
+      return { precision: 'month', year: y, month: Number(r.finished_from!.slice(5, 7)) }
     case 'year':
       return { precision: 'year', year: y }
     case 'decade':
@@ -51,7 +59,7 @@ export function dateChoiceOf(r: Pick<Reading, 'finished_from' | 'date_precision'
   }
 }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export function describeDate(c: DateChoice) {
   switch (c.precision) {
@@ -59,6 +67,8 @@ export function describeDate(c: DateChoice) {
       const [y, m, d] = c.date.split('-').map(Number)
       return `${d} ${MONTHS[m - 1]} ${y}`
     }
+    case 'month':
+      return `${MONTHS[c.month - 1]} ${c.year}`
     case 'year':
       return String(c.year)
     case 'decade':

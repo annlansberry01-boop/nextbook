@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   dateChoiceOf,
-  describeDate,
   lastFormat,
   saveBook,
   todayIso,
@@ -11,11 +10,11 @@ import {
 } from '../lib/actions'
 import type { Book, BookFormat, Reading } from '../lib/types'
 import Cover from './Cover'
+import DatePicker from './DatePicker'
 import './BookSheet.css'
 
 const STAR = 'M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z'
 const HEART = 'M12 20.5s-7.5-4.6-9.3-9.2C1.4 7.9 3.6 4.5 7 4.5c2 0 3.6 1.1 5 2.9 1.4-1.8 3-2.9 5-2.9 3.4 0 5.6 3.4 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z'
-const DECADES = [1970, 1980, 1990, 2000, 2010, 2020]
 const FORMATS: [BookFormat, string][] = [
   ['print', 'Print'],
   ['ebook', 'Ebook'],
@@ -52,7 +51,6 @@ export default function BookSheet({ book, current, status: initialStatus, mode, 
     if (prior) return dateChoiceOf(prior)
     return { precision: 'unknown' }
   })
-  const [pickDate, setPickDate] = useState(mode === 'rate' && date.precision === 'unknown')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -82,12 +80,6 @@ export default function BookSheet({ book, current, status: initialStatus, mode, 
   }
 
   const tapStar = (i: number) => setRating(rating === i ? i - 0.5 : i)
-  const decadeOn = (d: number) =>
-    (date.precision === 'decade' && date.decade === d) ||
-    (date.precision === 'year' && Math.floor(date.year / 10) * 10 === d)
-  const pickedDecade =
-    date.precision === 'decade' ? date.decade : date.precision === 'year' ? Math.floor(date.year / 10) * 10 : null
-  const thisYear = new Date().getFullYear()
 
   const title =
     mode === 'finish' ? 'Finished' : mode === 'reread' ? 'Read again' : mode === 'rate' ? 'Rate this book' : 'Update'
@@ -173,64 +165,7 @@ export default function BookSheet({ book, current, status: initialStatus, mode, 
         )}
 
         {(status === 'read' || status === 'dnf') && (
-          <div className="field">
-            <div className="field-label">
-              {status === 'dnf' ? 'When did you stop?' : 'Roughly when?'}
-              {!pickDate && (
-                <>
-                  <span className="field-value"> {describeDate(date)}</span>
-                  <button className="inline-link" onClick={() => setPickDate(true)}>
-                    Change
-                  </button>
-                </>
-              )}
-            </div>
-            {pickDate && (
-              <>
-                <div className="chips">
-                  <button
-                    className={`chip-btn${date.precision === 'exact' ? ' on' : ''}`}
-                    aria-pressed={date.precision === 'exact'}
-                    onClick={() => setDate({ precision: 'exact', date: todayIso() })}
-                  >
-                    Today
-                  </button>
-                  {DECADES.map((d) => (
-                    <button key={d} className={`chip-btn${decadeOn(d) ? ' on' : ''}`} aria-pressed={decadeOn(d)} onClick={() => setDate({ precision: 'decade', decade: d })}>
-                      {d}s
-                    </button>
-                  ))}
-                  <button
-                    className={`chip-btn${date.precision === 'unknown' ? ' on' : ''}`}
-                    aria-pressed={date.precision === 'unknown'}
-                    onClick={() => setDate({ precision: 'unknown' })}
-                  >
-                    Not sure
-                  </button>
-                </div>
-                {pickedDecade != null && (
-                  <div className="chips years">
-                    <span className="field-sub">Exact year (optional):</span>
-                    {Array.from({ length: 10 }, (_, k) => pickedDecade + k)
-                      .filter((y) => y <= thisYear)
-                      .map((y) => {
-                        const on = date.precision === 'year' && date.year === y
-                        return (
-                          <button
-                            key={y}
-                            className={`chip-btn small${on ? ' on' : ''}`}
-                            aria-pressed={on}
-                            onClick={() => setDate(on ? { precision: 'decade', decade: pickedDecade } : { precision: 'year', year: y })}
-                          >
-                            {y}
-                          </button>
-                        )
-                      })}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+          <DatePicker value={date} onChange={setDate} label={status === 'dnf' ? 'When did you stop?' : 'When did you finish?'} />
         )}
 
         {status !== 'tbr' && (
