@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ann's matched reading log for the one-off phase 1 import. Personal: keep out of the public repo.
+src/data/import.json

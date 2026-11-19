@@ -199,6 +199,14 @@ The app launches with Ann's existing log already loaded: about 200 rated books, 
 
 Current state to carry over: Prophet Song (reading, print), Roadside Picnic (reading, audio), A Memory Called Empire (finished, needs rating), Demon Copperhead (DNF, content).
 
+**The import is a one-off for Ann, not a feature (added 20 Nov 2026).** In phase 1 her matched log is bundled into the app (`src/data/import.json`) and an 'Import my books' card on Home copies it into whoever is signed in. That is only safe while Ann is the only user. Before phase 3 (go live), once her import has worked:
+
+1. Remove the import card, `src/lib/importLog.ts` and `src/data/import.json` from the app, so no other reader can import Ann's books and her log is never shipped to visitors' phones.
+2. Remove Ann's personal files from the public GitHub repo: `data/reading-log.md`, `data/reading-log.csv` and `data/taste-and-framework.md`. Keep them in a private place (her OneDrive 'Book app' folder already has the originals). Ask Ann whether the repo should go private instead, and whether to scrub them from git history.
+3. Check nothing else in the repo or the built app contains Ann's personal data or email.
+
+**Other readers** start with an empty shelf and add books through the '+' button (search), the 'Might have read' carousel, and in phase 2 Snap a cover and Paste a list. A general 'Import a CSV' for new readers is a possible v2 addition (Goodreads/StoryGraph import stays out of v1).
+
 ## Technical notes
 
 Build path is locked: code on GitHub, app hosted on Netlify, data and sign-in on Supabase (free plan), using Ann's existing accounts. Built locally first with Claude Code.

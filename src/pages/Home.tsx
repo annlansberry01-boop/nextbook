@@ -1,7 +1,27 @@
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Cover from '../components/Cover'
 import { PlusIcon, SearchIcon } from '../components/Icons'
+import Stars from '../components/Stars'
+import { loadHome } from '../lib/data'
+import { importSize, runImport } from '../lib/importLog'
+import { supabase } from '../lib/supabase'
+import './Home.css'
+
+type HomeData = Awaited<ReturnType<typeof loadHome>>
+
+const FORMAT_LABEL = { print: 'Print', ebook: 'Ebook', audio: 'Audio' } as const
 
 export default function Home() {
+  const [data, setData] = useState<HomeData | null>(null)
+  const [error, setError] = useState('')
+
+  const refresh = useCallback(() => {
+    loadHome().then(setData, (e: Error) => setError(e.message))
+  }, [])
+
+  useEffect(refresh, [refresh])
+
   return (
     <main className="screen">
       <header className="screen-header">
@@ -16,12 +36,153 @@ export default function Home() {
         </div>
       </header>
 
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <h2 className="section-label">Currently reading</h2>
-        <div className="placeholder-card">
-          Your books will appear here once we connect the database and import your reading log.
-        </div>
-      </section>
+      {error && <div className="placeholder-card" role="alert">Couldn't load your books: {error}</div>}
+
+      {data?.isEmpty && <ImportCard onDone={refresh} />}
+
+      {data && !data.isEmpty && (
+        <>
+          {data.reading.length > 0 && (
+            <section className="home-section">
+              <h2 className="section-label">Currently reading</h2>
+              {data.reading.map((r) => (
+                <div key={r.id} className="reading-card">
+                  <Cover book={r.book} width={64} small />
+                  <div className="reading-info">
+                    <div className="reading-title">{r.book.title}</div>
+                    <div className="reading-author">{r.book.authors.join(' & ')}</div>
+                    {r.format && <span className="chip">{FORMAT_LABEL[r.format]}</span>}
+                  </div>
+                  <button className="ghost-btn">Finish</button>
+                </div>
+              ))}
+            </section>
+          )}
+
+          <section className="feature-card">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <h2 className="feature-title">What should I read next?</h2>
+              <p className="feature-text">A quick mood check, then seven picks from your TBR and beyond.</p>
+            </div>
+            <Link to="/discover" className="feature-btn">
+              Pick my next read
+            </Link>
+          </section>
+
+          <Link to="/discover" className="swipe-prompt">
+            <div className="swipe-stack" aria-hidden="true">
+              <div style={{ left: 0, top: 8, background: '#3B4A5C', transform: 'rotate(-10deg)' }} />
+              <div style={{ left: 20, top: 4, background: '#6B3A3A', transform: 'rotate(-2deg)' }} />
+              <div style={{ left: 40, top: 6, background: '#4F5B3A', transform: 'rotate(8deg)' }} />
+            </div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <div className="swipe-title">Remember what you've read</div>
+              <div className="swipe-sub">Swipe through 15 books</div>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </Link>
+
+          {data.toCheck.length > 0 && (
+            <section className="home-section">
+              <h2 className="section-label">Check these ({data.toCheck.length})</h2>
+              <div className="check-list">
+                {data.toCheck.map((c) => (
+                  <div key={c.id} className="check-row">
+                    <div>
+                      <div className="reading-title" style={{ fontSize: 14 }}>{c.raw_title}</div>
+                      <div className="reading-author">{c.raw_author ?? 'Unknown author'}</div>
+                    </div>
+                    {c.rating != null && <Stars rating={c.rating} />}
+                  </div>
+                ))}
+              </div>
+              <p className="feature-text" style={{ fontSize: 13 }}>
+                Open Library couldn't find these. You'll be able to search and match them soon.
+              </p>
+            </section>
+          )}
+
+          {data.tbr.length > 0 && (
+            <section className="home-section">
+              <div className="row-head">
+                <h2 className="section-label">TBR</h2>
+                <Link to="/books" className="row-link">See all</Link>
+              </div>
+              <div className="cover-row">
+                {data.tbr.map((s) => (
+                  <div key={s.id} className="row-item">
+                    <Cover book={s.book} width={100} />
+                    <div className="row-caption">{s.book.title}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {data.recent.length > 0 && (
+            <section className="home-section">
+              <div className="row-head">
+                <h2 className="section-label">Recently read</h2>
+                <Link to="/books" className="row-link">Diary</Link>
+              </div>
+              <div className="cover-row">
+                {data.recent.map((r) => (
+                  <div key={r.id} className="row-item">
+                    <Cover book={r.book} width={100} />
+                    {r.rating != null ? (
+                      <Stars rating={r.rating} liked={r.liked} />
+                    ) : (
+                      <button className="rate-btn">Rate</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )}
+
+      <button className="link-signout" onClick={() => supabase.auth.signOut()}>
+        Sign out
+      </button>
     </main>
+  )
+}
+
+function ImportCard({ onDone }: { onDone: () => void }) {
+  const [step, setStep] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [result, setResult] = useState('')
+
+  async function go() {
+    setBusy(true)
+    setResult('')
+    try {
+      const r = await runImport(setStep)
+      setResult(`Imported ${r.books} books.${r.toCheck ? ` ${r.toCheck} need checking.` : ''}`)
+      onDone()
+    } catch (e) {
+      setResult(`Import stopped: ${(e as Error).message}`)
+    } finally {
+      setBusy(false)
+      setStep('')
+    }
+  }
+
+  return (
+    <section className="feature-card">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <h2 className="feature-title">Bring in your reading log</h2>
+        <p className="feature-text">
+          {importSize} books, with your ratings, current reads, DNF and TBR queue. Dates come in as 'Not sure'; you can add them later.
+        </p>
+      </div>
+      <button className="feature-btn" onClick={go} disabled={busy || importSize === 0}>
+        {importSize === 0 ? 'Still matching your books…' : busy ? step || 'Importing…' : 'Import my books'}
+      </button>
+      {result && <p className="feature-text" role="status">{result}</p>}
+    </section>
   )
 }

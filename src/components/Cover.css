@@ -1,0 +1,45 @@
+.cover {
+  flex: none;
+  display: block;
+  border-radius: 5px;
+  box-shadow: var(--shadow-cover);
+  object-fit: cover;
+  background: var(--surface-raised);
+}
+
+.cover.placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  color: #f2efe9;
+  overflow: hidden;
+}
+
+.ph-title {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.ph-author {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.cover.placeholder.small {
+  padding: 7px;
+  border-radius: 4px;
+}
+
+.cover.placeholder.small .ph-title {
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.cover.placeholder.small .ph-author {
+  font-size: 7px;
+}

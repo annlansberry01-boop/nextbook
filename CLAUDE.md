@@ -66,6 +66,7 @@ Keep AI calls cheap: cache everything, score each book once, batch where possibl
 
 ### Phase 3: go live
 
+0. Remove the one-off import card and Ann's personal data files from the app and repo (spec, 'Data import').
 1. Connect the GitHub repo to Netlify; set environment variables.
 2. Add the daily Netlify scheduled function that reads Supabase so the free project doesn't pause.
 3. Configure Supabase sign-in redirect URLs for the live site.
@@ -79,3 +80,4 @@ Keep AI calls cheap: cache everything, score each book once, batch where possibl
 - Prefer simple, well-known libraries. Explain any new paid service before using it.
 - If the spec and the designs disagree, the spec wins; ask Ann if it matters.
 - Open questions are listed at the end of the spec. Raise each one when you reach the feature it affects.
+- The GitHub repo is public. Never commit keys, and treat Ann's reading log and taste files as personal. Before go-live, remove the one-off import and her personal files (see the spec, 'Data import').
