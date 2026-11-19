@@ -1,5 +1,17 @@
 import { supabase } from './supabase'
-import type { Reading, ReviewItem, ShelfEntry } from './types'
+import type { Book, Reading, ReviewItem, ShelfEntry } from './types'
+
+/** Every book the reader has (read, reading, DNF or TBR), once each. */
+export async function allMyBooks(): Promise<Book[]> {
+  const [r, s] = await Promise.all([
+    supabase.from('readings').select('book:books(*)'),
+    supabase.from('shelf_entries').select('book:books(*)'),
+  ])
+  const map = new Map<string, Book>()
+  for (const row of [...(r.data ?? []), ...(s.data ?? [])] as unknown as { book: Book | null }[])
+    if (row.book) map.set(row.book.id, row.book)
+  return [...map.values()]
+}
 
 export async function loadHome() {
   const [readings, shelf, review] = await Promise.all([

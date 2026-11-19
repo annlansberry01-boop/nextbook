@@ -4,7 +4,8 @@ import BookCover from '../components/BookCover'
 import BookSheet, { type SheetRequest } from '../components/BookSheet'
 import { PlusIcon, SearchIcon } from '../components/Icons'
 import Stars from '../components/Stars'
-import { loadHome } from '../lib/data'
+import { fixCoversInBackground } from '../lib/covers'
+import { allMyBooks, loadHome } from '../lib/data'
 import { importSize, runImport } from '../lib/importLog'
 import { supabase } from '../lib/supabase'
 import './Home.css'
@@ -23,6 +24,13 @@ export default function Home() {
   }, [])
 
   useEffect(refresh, [refresh])
+
+  // Once your books are in, quietly swap any non-English covers for English ones.
+  const hasBooks = !!data && !data.isEmpty
+  useEffect(() => {
+    if (!hasBooks) return
+    allMyBooks().then((books) => fixCoversInBackground(books, refresh), () => {})
+  }, [hasBooks, refresh])
 
   return (
     <main className="screen">

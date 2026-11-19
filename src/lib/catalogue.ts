@@ -1,4 +1,5 @@
 // Book search (Open Library) and adding a result to the shared catalogue.
+import { englishCoverId } from './covers'
 import { supabase } from './supabase'
 import { coverUrlFor, type Book } from './types'
 
@@ -41,14 +42,19 @@ export async function searchBooks(query: string, signal?: AbortSignal): Promise<
 
 /** Adds a search result to the catalogue (if it isn't there yet) and returns the catalogue book. */
 export async function ensureBook(r: SearchResult): Promise<Book> {
+  const existing = await supabase.from('books').select('*').eq('ol_work_key', r.key).maybeSingle()
+  if (existing.data) return existing.data as Book
+
+  // Prefer an English edition's cover (falls back to the search result's cover).
+  const coverId = await englishCoverId(r.key, r.title, r.cover_id).catch(() => r.cover_id)
   const ins = await supabase.from('books').upsert(
     {
       title: r.title,
       authors: r.authors,
       year: r.year,
       ol_work_key: r.key,
-      cover_id: r.cover_id,
-      cover_url: coverUrlFor(r.cover_id),
+      cover_id: coverId,
+      cover_url: coverUrlFor(coverId),
       page_count: r.page_count,
       subjects: r.subjects,
     },
