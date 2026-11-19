@@ -4,6 +4,8 @@ import BookSheet, { type SheetRequest } from '../components/BookSheet'
 import Cover from '../components/Cover'
 import Stars from '../components/Stars'
 import { dateChoiceOf, describeDate, loadBookPage, saveBook, toast } from '../lib/actions'
+import { GENRES, genreOf } from '../lib/genre'
+import { supabase } from '../lib/supabase'
 import type { Reading } from '../lib/types'
 import './BookPage.css'
 
@@ -72,6 +74,21 @@ export default function BookPage() {
           <h1 className="book-title">{book.title}</h1>
           <div className="book-author">{book.authors.join(' & ')}</div>
           {details && <div className="book-details">{details}</div>}
+          <label className="genre-pick">
+            <span>Genre</span>
+            <select
+              value={genreOf(book)}
+              onChange={async (e) => {
+                const { error } = await supabase.from('books').update({ genre: e.target.value }).eq('id', book.id)
+                toast(error ? `Couldn't change genre: ${error.message}` : `Genre set to ${e.target.value}`)
+                refresh()
+              }}
+            >
+              {GENRES.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+            </select>
+          </label>
           <div className="book-status">{statusLine}</div>
           {latest?.status === 'read' && latest.rating != null && <Stars rating={latest.rating} liked={latest.liked} size={18} />}
         </div>

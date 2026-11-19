@@ -11,12 +11,15 @@ function colourFor(title: string) {
   return PALETTE[h % PALETTE.length]
 }
 
-type Props = { book: Pick<Book, 'title' | 'authors' | 'cover_url'>; width: number; small?: boolean }
+// width: a pixel width, or 'fluid' to fill the parent (e.g. a grid column) at book proportions.
+type Props = { book: Pick<Book, 'title' | 'authors' | 'cover_url'>; width: number | 'fluid'; small?: boolean }
 
 export default function Cover({ book, width, small }: Props) {
   const [failed, setFailed] = useState(false)
-  const height = Math.round(width * 1.5)
-  const style = { width, height }
+  const style =
+    width === 'fluid'
+      ? { width: '100%', height: 'auto', aspectRatio: '2 / 3' }
+      : { width, height: Math.round(width * 1.5) }
 
   if (book.cover_url && !failed) {
     return (

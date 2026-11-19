@@ -120,7 +120,7 @@ export default function Home() {
             <section className="home-section">
               <div className="row-head">
                 <h2 className="section-label">TBR</h2>
-                <Link to="/books" className="row-link">See all</Link>
+                <Link to="/books?view=tbr" className="row-link">See all</Link>
               </div>
               <div className="cover-row">
                 {data.tbr.map((s) => (
@@ -137,7 +137,7 @@ export default function Home() {
             <section className="home-section">
               <div className="row-head">
                 <h2 className="section-label">Recently read</h2>
-                <Link to="/books" className="row-link">Diary</Link>
+                <Link to="/books?view=diary" className="row-link">Diary</Link>
               </div>
               <div className="cover-row">
                 {data.recent.map((r) => (

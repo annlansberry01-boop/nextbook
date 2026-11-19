@@ -5,7 +5,7 @@ import Cover from './Cover'
 
 type Props = {
   book: Book
-  width: number
+  width: number | 'fluid'
   small?: boolean
   onLongPress: () => void
 }
@@ -27,6 +27,7 @@ export default function BookCover({ book, width, small, onLongPress }: Props) {
   return (
     <button
       className="cover-btn"
+      style={width === 'fluid' ? { width: '100%' } : undefined}
       aria-label={`${book.title}. Tap to open, press and hold for quick actions`}
       onPointerDown={(e) => {
         held.current = false

@@ -104,3 +104,32 @@
   font-size: 13px;
   color: var(--text-muted);
 }
+
+.genre-pick {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 4px 0 10px;
+  border-radius: 16px;
+  border: 1px solid var(--border-strong);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.genre-pick select {
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.genre-pick option {
+  background: var(--surface);
+  color: var(--text);
+}
