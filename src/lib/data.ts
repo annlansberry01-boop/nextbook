@@ -15,8 +15,14 @@ export async function loadHome() {
   for (const r of [readings, shelf, review]) if (r.error) throw new Error(r.error.message)
 
   const all = (readings.data ?? []) as Reading[]
-  const finished = all
-    .filter((r) => r.status === 'read')
+  const tbr = (shelf.data ?? []) as ShelfEntry[]
+  // A book back on the TBR, or being read again, belongs in that row, not in Recently read.
+  const busy = new Set([...tbr.map((s) => s.book_id), ...all.filter((r) => r.status === 'reading').map((r) => r.book_id)])
+  // Only the latest reading of each book counts for Recently read.
+  const latestByBook = new Map<string, Reading>()
+  for (const r of all) if (!latestByBook.has(r.book_id)) latestByBook.set(r.book_id, r)
+  const finished = [...latestByBook.values()]
+    .filter((r) => r.status === 'read' && !busy.has(r.book_id))
     .sort((a, b) => {
       // Unrated first (they need attention), then most recently finished or added.
       if ((a.rating == null) !== (b.rating == null)) return a.rating == null ? -1 : 1
@@ -28,7 +34,7 @@ export async function loadHome() {
   return {
     reading: all.filter((r) => r.status === 'reading'),
     recent: finished.slice(0, 12),
-    tbr: (shelf.data ?? []) as ShelfEntry[],
+    tbr,
     toCheck: (review.data ?? []) as ReviewItem[],
     isEmpty: all.length === 0 && (shelf.data ?? []).length === 0 && (review.data ?? []).length === 0,
   }
