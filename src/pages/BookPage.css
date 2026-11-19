@@ -1,0 +1,106 @@
+.book-hero {
+  display: flex;
+  gap: 18px;
+  align-items: flex-end;
+}
+
+.book-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.book-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.book-author {
+  font-size: 15px;
+  color: var(--text-soft);
+}
+
+.book-details {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.book-status {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.book-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.book-actions .btn-primary,
+.book-actions .btn-secondary {
+  flex: 1 1 auto;
+  min-width: 120px;
+  height: 48px;
+  padding: 0 16px;
+}
+
+.book-actions .btn-primary {
+  flex-basis: 100%;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.history-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 14px;
+  min-height: var(--tap);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.history-row:last-child {
+  border-bottom: none;
+}
+
+.history-when {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.history-format {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.history-note {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.muted {
+  font-size: 13px;
+  color: var(--text-muted);
+}

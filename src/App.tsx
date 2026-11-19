@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import TabBar from './components/TabBar'
+import Toast from './components/Toast'
+import BookPage from './pages/BookPage'
 import { AuthProvider, useAuth } from './lib/auth'
 import Home from './pages/Home'
 import Discover from './pages/Discover'
@@ -19,8 +21,10 @@ function Shell() {
         <Route path="/discover" element={<Discover />} />
         <Route path="/books" element={<MyBooks />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/book/:id" element={<BookPage />} />
       </Routes>
       <TabBar />
+      <Toast />
     </BrowserRouter>
   )
 }

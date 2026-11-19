@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import Cover from '../components/Cover'
+import BookCover from '../components/BookCover'
+import BookSheet, { type SheetRequest } from '../components/BookSheet'
 import { PlusIcon, SearchIcon } from '../components/Icons'
 import Stars from '../components/Stars'
 import { loadHome } from '../lib/data'
@@ -15,6 +16,7 @@ const FORMAT_LABEL = { print: 'Print', ebook: 'Ebook', audio: 'Audio' } as const
 export default function Home() {
   const [data, setData] = useState<HomeData | null>(null)
   const [error, setError] = useState('')
+  const [sheet, setSheet] = useState<SheetRequest | null>(null)
 
   const refresh = useCallback(() => {
     loadHome().then(setData, (e: Error) => setError(e.message))
@@ -30,9 +32,9 @@ export default function Home() {
           <Link to="/search" className="icon-btn" aria-label="Search">
             <SearchIcon size={20} />
           </Link>
-          <button className="icon-btn accent" aria-label="Add a book">
+          <Link to="/search" className="icon-btn accent" aria-label="Add a book">
             <PlusIcon />
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -47,13 +49,15 @@ export default function Home() {
               <h2 className="section-label">Currently reading</h2>
               {data.reading.map((r) => (
                 <div key={r.id} className="reading-card">
-                  <Cover book={r.book} width={64} small />
+                  <BookCover book={r.book} width={64} small onLongPress={() => setSheet({ book: r.book, current: r, status: 'reading', mode: 'quick' })} />
                   <div className="reading-info">
                     <div className="reading-title">{r.book.title}</div>
                     <div className="reading-author">{r.book.authors.join(' & ')}</div>
                     {r.format && <span className="chip">{FORMAT_LABEL[r.format]}</span>}
                   </div>
-                  <button className="ghost-btn">Finish</button>
+                  <button className="ghost-btn" onClick={() => setSheet({ book: r.book, current: r, status: 'read', mode: 'finish' })}>
+                    Finish
+                  </button>
                 </div>
               ))}
             </section>
@@ -113,7 +117,7 @@ export default function Home() {
               <div className="cover-row">
                 {data.tbr.map((s) => (
                   <div key={s.id} className="row-item">
-                    <Cover book={s.book} width={100} />
+                    <BookCover book={s.book} width={100} onLongPress={() => setSheet({ book: s.book, current: null, status: 'tbr', mode: 'quick' })} />
                     <div className="row-caption">{s.book.title}</div>
                   </div>
                 ))}
@@ -130,11 +134,13 @@ export default function Home() {
               <div className="cover-row">
                 {data.recent.map((r) => (
                   <div key={r.id} className="row-item">
-                    <Cover book={r.book} width={100} />
+                    <BookCover book={r.book} width={100} onLongPress={() => setSheet({ book: r.book, current: r, status: 'read', mode: 'quick' })} />
                     {r.rating != null ? (
                       <Stars rating={r.rating} liked={r.liked} />
                     ) : (
-                      <button className="rate-btn">Rate</button>
+                      <button className="rate-btn" onClick={() => setSheet({ book: r.book, current: r, status: 'read', mode: 'rate' })}>
+                        Rate
+                      </button>
                     )}
                   </div>
                 ))}
@@ -144,9 +150,17 @@ export default function Home() {
         </>
       )}
 
+      {data && !data.isEmpty && (
+        <p className="feature-text" style={{ fontSize: 13, textAlign: 'center' }}>
+          Tip: tap a cover to open the book. Press and hold (or right-click) for quick actions.
+        </p>
+      )}
+
       <button className="link-signout" onClick={() => supabase.auth.signOut()}>
         Sign out
       </button>
+
+      {sheet && <BookSheet {...sheet} onClose={() => setSheet(null)} onSaved={refresh} />}
     </main>
   )
 }
