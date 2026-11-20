@@ -11,7 +11,7 @@ import Diary from './Diary'
 import './MyBooks.css'
 
 type View = 'read' | 'tbr' | 'dnf' | 'liked' | 'diary'
-type ReadSort = 'date' | 'rating' | 'author' | 'title'
+type ReadSort = 'date' | 'rating' | 'author' | 'title' | 'genre'
 type TbrSort = 'added' | 'genre'
 
 const VIEWS: [View, string][] = [
@@ -75,7 +75,8 @@ export default function MyBooks() {
     const filtered = format === 'all' ? src : src.filter((r) => r.format === format)
     const sorted = [...filtered]
     if (readSort === 'date') sorted.sort(byDate)
-    if (readSort === 'rating') sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0) || a.book.title.localeCompare(b.book.title))
+    // Genre groups list best-rated first, so 'rating' order is used inside each group.
+    if (readSort === 'rating' || readSort === 'genre') sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0) || a.book.title.localeCompare(b.book.title))
     if (readSort === 'author') sorted.sort((a, b) => surname(a).localeCompare(surname(b)) || a.book.title.localeCompare(b.book.title))
     if (readSort === 'title') sorted.sort((a, b) => a.book.title.replace(/^(the|a|an) /i, '').localeCompare(b.book.title.replace(/^(the|a|an) /i, '')))
     return sorted
@@ -178,6 +179,7 @@ export default function MyBooks() {
                   <option value="rating">Rating</option>
                   <option value="author">Author</option>
                   <option value="title">Title</option>
+                  <option value="genre">Genre</option>
                 </select>
               </label>
             )}
@@ -202,14 +204,27 @@ export default function MyBooks() {
                     : 'Nothing here yet.'}
             </div>
           )}
-          <Grid>
-            {readList.map((r) => (
+          {(() => {
+            const cell = (r: Reading) => (
               <GridItem key={r.id} caption={view === 'dnf' ? (r.note ?? 'DNF') : undefined}>
                 <BookCover book={r.book} width="fluid" onLongPress={() => openReading(r)} />
                 {view !== 'dnf' && (r.rating != null ? <Stars rating={r.rating} liked={r.liked} size={12} /> : <span className="unrated">Not rated</span>)}
               </GridItem>
-            ))}
-          </Grid>
+            )
+            if (readSort !== 'genre' || view === 'dnf') return <Grid>{readList.map(cell)}</Grid>
+            return GENRES.map((g) => {
+              const items = readList.filter((r) => genreOf(r.book) === g)
+              if (!items.length) return null
+              return (
+                <section key={g} className="home-section">
+                  <h2 className="section-label">
+                    {g} <span className="label-count">{items.length}</span>
+                  </h2>
+                  <Grid>{items.map(cell)}</Grid>
+                </section>
+              )
+            })
+          })()}
         </>
       )}
 
