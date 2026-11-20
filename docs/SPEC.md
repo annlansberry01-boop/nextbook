@@ -201,7 +201,7 @@ Current state to carry over: Prophet Song (reading, print), Roadside Picnic (rea
 
 **The import is a one-off for Ann, not a feature (added 20 Nov 2026).** In phase 1 her matched log is bundled into the app (`src/data/import.json`) and an 'Import my books' card on Home copies it into whoever is signed in. That is only safe while Ann is the only user. Before phase 3 (go live), once her import has worked:
 
-1. Remove the import card, `src/lib/importLog.ts` and `src/data/import.json` from the app, so no other reader can import Ann's books and her log is never shipped to visitors' phones.
+1. Remove the import card, `src/lib/importLog.ts`, `src/data/import.json`, `src/lib/genreSeed.ts` and `src/data/genres.json` from the app, so no other reader can import Ann's books and her log is never shipped to visitors' phones.
 2. Remove Ann's personal files from the public GitHub repo: `data/reading-log.md`, `data/reading-log.csv` and `data/taste-and-framework.md`. Keep them in a private place (her OneDrive 'Book app' folder already has the originals). Ask Ann whether the repo should go private instead, and whether to scrub them from git history.
 3. Check nothing else in the repo or the built app contains Ann's personal data or email.
 
@@ -236,5 +236,5 @@ Build path is locked: code on GitHub, app hosted on Netlify, data and sign-in on
 - [ ] App name: keep 'Next Book'?
 - [ ] Carousel deck size: is 15 right, or 10?
 - [ ] Audio length data is patchy in public APIs. Acceptable to enter it manually when missing?
-- [x] Genre labels for TBR grouping: decided 20 Nov 2026, a short fixed list (Sci-fi, Fantasy, Crime, Gothic, Historical, Literary, Contemporary), guessed from Open Library subjects and changeable on the book page.
+- [x] Genre labels: decided 20 Nov 2026. Eight bookshop labels: Science fiction, Fantasy, Crime & thriller, Gothic & horror, Historical fiction, Literary fiction, Contemporary fiction, Classics. Classics = first published before 1960, except science fiction, fantasy and crime keep their genre. Ann's imported books were set by hand; new books are guessed from Open Library subjects and year (often wrong for old books), and any genre can be changed on the book page. TBR, Read and Liked can all be grouped by genre.
 - [ ] Hand-set genres are stored on the shared catalogue (books.genre), so every reader sees them. Move to a per-reader setting before adding other users.

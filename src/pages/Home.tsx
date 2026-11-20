@@ -6,6 +6,7 @@ import { PlusIcon, SearchIcon } from '../components/Icons'
 import Stars from '../components/Stars'
 import { fixCoversInBackground } from '../lib/covers'
 import { allMyBooks, loadHome } from '../lib/data'
+import { seedGenres } from '../lib/genreSeed'
 import { importSize, runImport } from '../lib/importLog'
 import { supabase } from '../lib/supabase'
 import './Home.css'
@@ -29,7 +30,10 @@ export default function Home() {
   const hasBooks = !!data && !data.isEmpty
   useEffect(() => {
     if (!hasBooks) return
-    allMyBooks().then((books) => fixCoversInBackground(books, refresh), () => {})
+    allMyBooks().then(async (books) => {
+      await seedGenres(books, refresh)
+      await fixCoversInBackground(books, refresh)
+    }, () => {})
   }, [hasBooks, refresh])
 
   return (
