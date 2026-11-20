@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import BookSheet, { type SheetRequest } from '../components/BookSheet'
-import Carousel, { type SwipeDir } from '../components/Carousel'
+import Blurb from '../components/Blurb'
+import Carousel from '../components/Carousel'
 import { saveBook, toast } from '../lib/actions'
+import { getBlurb } from '../lib/blurb'
 import { ensureBook } from '../lib/catalogue'
 import {
   buildDeck,
@@ -139,7 +141,11 @@ export default function Discover() {
     }
   }
 
-  const onSwipe = (dir: SwipeDir) => act(dir === 'right' ? 'read' : dir === 'left' ? 'notread' : 'tbr')
+  // Fetch descriptions for the next couple of cards ahead of time, so they're ready when you get there.
+  useEffect(() => {
+    if (!deck) return
+    for (const c of deck.cards.slice(deck.centre + 1, deck.centre + 3)) getBlurb(c.key, c.title, c.authors[0] ?? '')
+  }, [deck])
 
   const doneCount = deck ? Object.keys(deck.done).length : 0
   const tally = deck
@@ -230,8 +236,9 @@ export default function Discover() {
                   centre={deck.centre}
                   done={deck.done}
                   onCentre={(i) => update({ ...deck, centre: i })}
-                  onSwipe={onSwipe}
+                  onSwipeUp={() => act('tbr')}
                 />
+                <p className="browse-hint">Swipe or tap a cover to browse</p>
                 <div className="card-details">
                   <div className="card-title">{card.title}</div>
                   <div className="card-sub">
@@ -239,23 +246,24 @@ export default function Discover() {
                     {card.year ? ` · ${card.year}` : ''}
                   </div>
                   <div className="card-why">{card.why}</div>
+                  <Blurb workKey={card.key} title={card.title} author={card.authors[0] ?? ''} />
                 </div>
 
                 <div className="deck-actions">
-                  <ActionButton label="Not read" hint="← swipe" onClick={() => act('notread')} disabled={busy}>
+                  <ActionButton label="Not read" hint="" onClick={() => act('notread')} disabled={busy}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
                       <path d="M6 6l12 12M18 6L6 18" />
                     </svg>
                   </ActionButton>
-                  <ActionButton label="Didn't finish" hint="tap" onClick={() => act('dnf')} disabled={busy} aria="Started, didn't finish">
+                  <ActionButton label="Didn't finish" hint="" onClick={() => act('dnf')} disabled={busy} aria="Started, didn't finish">
                     <span className="dnf-text">DNF</span>
                   </ActionButton>
-                  <ActionButton label="TBR" hint="↑ swipe" onClick={() => act('tbr')} disabled={busy} aria="Add to TBR">
+                  <ActionButton label="TBR" hint="or swipe ↑" onClick={() => act('tbr')} disabled={busy} aria="Add to TBR">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
                       <path d="M6 3h12v18l-6-4-6 4z" />
                     </svg>
                   </ActionButton>
-                  <ActionButton label="Read it" hint="swipe →" onClick={() => act('read')} disabled={busy} primary>
+                  <ActionButton label="Read it" hint="" onClick={() => act('read')} disabled={busy} primary>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M5 12.5l4.5 4.5L19 7.5" />
                     </svg>
@@ -305,8 +313,12 @@ function ActionButton({
       </button>
       <div className="action-label">
         {label}
-        <br />
-        <span>{hint}</span>
+        {hint && (
+          <>
+            <br />
+            <span>{hint}</span>
+          </>
+        )}
       </div>
     </div>
   )

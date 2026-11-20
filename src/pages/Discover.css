@@ -274,3 +274,75 @@
 .deck-done .btn-primary {
   padding: 0 28px;
 }
+
+.blurb {
+  max-width: 420px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.blurb p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.blurb p.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.blurb.none {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.blurb.loading {
+  width: min(320px, 100%);
+  gap: 8px;
+}
+
+.blurb.loading span {
+  display: block;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--surface-raised);
+  animation: blurb-pulse 1.4s ease-in-out infinite;
+}
+
+.blurb.loading span:last-child {
+  width: 70%;
+}
+
+@keyframes blurb-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blurb.loading span {
+    animation: none;
+  }
+}
+
+.browse-hint {
+  margin: -6px 0 0;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Laptops and tablets: give the carousel more room so the covers can grow. */
+@media (min-width: 700px) {
+  .screen.discover {
+    max-width: 760px;
+  }
+}

@@ -77,14 +77,14 @@ The carousel backfills reading history in short bursts: a deck of 15 cards, swip
 
 **Layout:** a curved (concave) carousel showing 7 covers at once. The centre cover is larger, outlined in the accent colour and fully bright; side covers angle inward and are dimmed. Tapping a side cover brings it to the centre. See `docs/design/Discover.dc.html`.
 
-**Card content:** cover, title, author, year, and a one-line 'why you're seeing this' (e.g. 'Another McEwan', 'Booker Prize 1998').
+**Card content:** cover, title, author, year, a one-line 'why you're seeing this' (e.g. 'Another McEwan', 'Booker Prize 1998'), and a short description (Open Library, Google Books fallback; three lines with More). Covers scale up on wider screens.
 
-**Card actions**
+**Card actions** (changed 20 Nov 2026 after testing: swiping left/right now browses the carousel, like flicking along a shelf; Read it, Not read and DNF are buttons; swipe up still adds to TBR)
 
 | Action | Gesture | Result |
 | --- | --- | --- |
-| Read it | Swipe right | Opens quick rate: stars, Like, fuzzy date, optional note |
-| Not read | Swipe left | Dismissed for good |
+| Read it | Button (was swipe right) | Opens quick rate: stars, Like, fuzzy date, optional note |
+| Not read | Button (was swipe left) | Dismissed for good |
 | Add to TBR | Swipe up | Saved to TBR |
 | Started, didn't finish | Tap DNF button | Logged as DNF, optional reason |
 
