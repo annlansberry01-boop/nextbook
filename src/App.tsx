@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { runMaintenance } from './lib/maintenance'
 import TabBar from './components/TabBar'
 import Toast from './components/Toast'
 import BookPage from './pages/BookPage'
@@ -11,6 +13,10 @@ import SignIn from './pages/SignIn'
 
 function Shell() {
   const { session, loading } = useAuth()
+  // Background tidy-ups (genres, English covers) once signed in, on any page.
+  useEffect(() => {
+    if (session) runMaintenance()
+  }, [session])
   if (loading) return null
   if (!session) return <SignIn />
 

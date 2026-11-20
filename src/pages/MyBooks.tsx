@@ -5,6 +5,7 @@ import BookSheet, { type SheetRequest } from '../components/BookSheet'
 import Stars from '../components/Stars'
 import { toast } from '../lib/actions'
 import { GENRES, genreOf } from '../lib/genre'
+import { useDataChanged } from '../lib/maintenance'
 import { byDate, exportCsv, loadMyBooks, surname } from '../lib/mybooks'
 import type { BookFormat, Reading, ShelfEntry } from '../lib/types'
 import Diary from './Diary'
@@ -55,6 +56,7 @@ export default function MyBooks() {
     loadMyBooks().then(setData, (e: Error) => setError(e.message))
   }, [])
   useEffect(refresh, [refresh])
+  useDataChanged(refresh)
 
   const setView = (v: View) => {
     remember('nb.view', v)

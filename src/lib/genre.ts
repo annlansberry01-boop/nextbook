@@ -39,11 +39,16 @@ const OLD_NAMES: Record<string, Genre> = {
   Contemporary: 'Contemporary fiction',
 }
 
+// 'Literary' and 'contemporary' describe register, not subject, so a specific genre always beats them
+// (Wolf Hall is Historical fiction even though it's also literary).
+const GENERAL: Genre[] = ['Literary fiction', 'Contemporary fiction']
+
 export function guessGenre(subjects: string[], year: number | null): Genre {
   const text = subjects.map((s) => s.toLowerCase())
   let best: Genre | null = null
   let bestScore = 0
   for (const [genre, re] of RULES) {
+    if (best && !GENERAL.includes(best) && GENERAL.includes(genre)) break
     const score = text.filter((s) => re.test(s)).length
     if (score > bestScore) {
       best = genre

@@ -4,10 +4,9 @@ import BookCover from '../components/BookCover'
 import BookSheet, { type SheetRequest } from '../components/BookSheet'
 import { PlusIcon, SearchIcon } from '../components/Icons'
 import Stars from '../components/Stars'
-import { fixCoversInBackground } from '../lib/covers'
-import { allMyBooks, loadHome } from '../lib/data'
-import { seedGenres } from '../lib/genreSeed'
+import { loadHome } from '../lib/data'
 import { importSize, runImport } from '../lib/importLog'
+import { runMaintenance, useDataChanged } from '../lib/maintenance'
 import { supabase } from '../lib/supabase'
 import './Home.css'
 
@@ -25,16 +24,7 @@ export default function Home() {
   }, [])
 
   useEffect(refresh, [refresh])
-
-  // Once your books are in, quietly swap any non-English covers for English ones.
-  const hasBooks = !!data && !data.isEmpty
-  useEffect(() => {
-    if (!hasBooks) return
-    allMyBooks().then(async (books) => {
-      await seedGenres(books, refresh)
-      await fixCoversInBackground(books, refresh)
-    }, () => {})
-  }, [hasBooks, refresh])
+  useDataChanged(refresh)
 
   return (
     <main className="screen">
@@ -52,7 +42,14 @@ export default function Home() {
 
       {error && <div className="placeholder-card" role="alert">Couldn't load your books: {error}</div>}
 
-      {data?.isEmpty && <ImportCard onDone={refresh} />}
+      {data?.isEmpty && (
+        <ImportCard
+          onDone={() => {
+            refresh()
+            runMaintenance()
+          }}
+        />
+      )}
 
       {data && !data.isEmpty && (
         <>
