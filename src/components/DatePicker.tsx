@@ -3,11 +3,12 @@ import { describeDate, MONTHS, todayIso, type DateChoice } from '../lib/actions'
 
 const DECADES = [1970, 1980, 1990, 2000, 2010, 2020]
 
-type Props = { value: DateChoice; onChange: (d: DateChoice) => void; label: string }
+// startOlder: open on decades (for backfilling old reads from the Discover carousel).
+type Props = { value: DateChoice; onChange: (d: DateChoice) => void; label: string; startOlder?: boolean }
 
 // Recent reads first: Today, then the last 12 months, then an exact day.
 // Older reads: decades, then an optional year. 'Not sure' is always there.
-export default function DatePicker({ value, onChange, label }: Props) {
+export default function DatePicker({ value, onChange, label, startOlder }: Props) {
   const now = new Date()
   const thisYear = now.getFullYear()
   const today = todayIso()
@@ -16,7 +17,7 @@ export default function DatePicker({ value, onChange, label }: Props) {
     (value.precision === 'decade') ||
     (value.precision === 'year' && value.year < thisYear - 1) ||
     (value.precision === 'month' && value.year < thisYear - 1)
-  const [view, setView] = useState<'recent' | 'older'>(isOld ? 'older' : 'recent')
+  const [view, setView] = useState<'recent' | 'older'>(isOld || startOlder ? 'older' : 'recent')
   const dayInput = useRef<HTMLInputElement>(null)
 
   // The last 12 months, newest first, with a year tag when it's not this year.

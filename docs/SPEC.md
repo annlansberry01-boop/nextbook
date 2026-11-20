@@ -235,6 +235,7 @@ Build path is locked: code on GitHub, app hosted on Netlify, data and sign-in on
 
 - [ ] App name: keep 'Next Book'?
 - [ ] Carousel deck size: is 15 right, or 10?
+- [ ] Top 250 novels deck: which ranking should the fixed list follow? (Not built yet; phase 1 has For you, Same authors, 7 prize lists, 6 decades and 6 genres.)
 - [ ] Audio length data is patchy in public APIs. Acceptable to enter it manually when missing?
 - [x] Genre labels: decided 20 Nov 2026. Eight bookshop labels: Science fiction, Fantasy, Crime & thriller, Gothic & horror, Historical fiction, Literary fiction, Contemporary fiction, Classics. Classics = first published before 1960, except science fiction, fantasy and crime keep their genre. Ann's imported books were set by hand; new books are guessed from Open Library subjects and year (often wrong for old books), and any genre can be changed on the book page. TBR, Read and Liked can all be grouped by genre. One genre per book, like a shop shelf: a specific genre (science fiction, fantasy, crime, gothic, historical) always beats Literary or Contemporary fiction, which describe register rather than subject. Historical fiction = set at least 50 years before it was written (Historical Novel Society definition), so Wolf Hall is Historical fiction and Saturday is Literary fiction.
 - [ ] Hand-set genres are stored on the shared catalogue (books.genre), so every reader sees them. Move to a per-reader setting before adding other users.

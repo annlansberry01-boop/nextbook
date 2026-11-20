@@ -33,11 +33,12 @@ export type SheetRequest = {
   current: Reading | null // latest reading of this book, if any
   status: SheetStatus // which status the sheet opens on
   mode: 'finish' | 'rate' | 'quick' | 'reread'
+  backfill?: boolean // from the Discover carousel: date picker opens on decades
 }
 
 type Props = SheetRequest & { onClose: () => void; onSaved: () => void }
 
-export default function BookSheet({ book, current, status: initialStatus, mode, onClose, onSaved }: Props) {
+export default function BookSheet({ book, current, status: initialStatus, mode, backfill, onClose, onSaved }: Props) {
   // Pre-fill from the latest reading; a re-read keeps the old rating unless changed.
   const prior = current && (current.status === 'read' || current.status === 'dnf') ? current : null
   const [status, setStatus] = useState<SheetStatus>(initialStatus)
@@ -165,7 +166,7 @@ export default function BookSheet({ book, current, status: initialStatus, mode, 
         )}
 
         {(status === 'read' || status === 'dnf') && (
-          <DatePicker value={date} onChange={setDate} label={status === 'dnf' ? 'When did you stop?' : 'When did you finish?'} />
+          <DatePicker value={date} onChange={setDate} startOlder={backfill} label={status === 'dnf' ? 'When did you stop?' : backfill ? 'Roughly when?' : 'When did you finish?'} />
         )}
 
         {status !== 'tbr' && (
