@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { reportCoverFailure } from '../lib/coverStatus'
 import type { Book } from '../lib/types'
 import './Cover.css'
 
@@ -14,33 +15,48 @@ function colourFor(title: string) {
 // width: a pixel width, or 'fluid' to fill the parent (e.g. a grid column) at book proportions.
 type Props = { book: Pick<Book, 'title' | 'authors' | 'cover_url'>; width: number | 'fluid'; small?: boolean }
 
+/**
+ * The placeholder card (title and author on a muted colour) is always drawn first.
+ * The real cover fades in on top once Open Library delivers it; while it's on its way
+ * the card gently pulses. If the cover never arrives, the card simply stays.
+ */
 export default function Cover({ book, width, small }: Props) {
-  const [failed, setFailed] = useState(false)
-  const style =
+  const [state, setState] = useState<'loading' | 'loaded' | 'failed'>(book.cover_url ? 'loading' : 'failed')
+  const size =
     width === 'fluid'
-      ? { width: '100%', height: 'auto', aspectRatio: '2 / 3' }
+      ? { width: '100%', aspectRatio: '2 / 3' }
       : { width, height: Math.round(width * 1.5) }
-
-  if (book.cover_url && !failed) {
-    return (
-      <img
-        className="cover"
-        style={style}
-        src={book.cover_url}
-        alt={`${book.title} cover`}
-        loading="lazy"
-        // Open Library returns a 1x1 image when it has no art; treat that as missing.
-        onLoad={(e) => e.currentTarget.naturalWidth < 10 && setFailed(true)}
-        onError={() => setFailed(true)}
-      />
-    )
-  }
-
   const author = book.authors[0] ?? ''
+
   return (
-    <div className={`cover placeholder${small ? ' small' : ''}`} style={{ ...style, background: colourFor(book.title) }} role="img" aria-label={`${book.title} by ${author}`}>
-      <div className="ph-title">{book.title}</div>
-      <div className="ph-author">{small ? author.split(' ').pop() : author}</div>
+    <div
+      className={`cover placeholder${small ? ' small' : ''}${state === 'loading' ? ' loading' : ''}`}
+      style={{ ...size, background: colourFor(book.title) }}
+      role="img"
+      aria-label={`${book.title} by ${author}`}
+    >
+      {state !== 'loaded' && (
+        <>
+          <div className="ph-title">{book.title}</div>
+          <div className="ph-author">{small ? author.split(' ').pop() : author}</div>
+        </>
+      )}
+      {book.cover_url && state !== 'failed' && (
+        <img
+          className={`cover-img${state === 'loaded' ? ' shown' : ''}`}
+          src={book.cover_url}
+          alt=""
+          loading="lazy"
+          onLoad={(e) => {
+            // Open Library returns a 1x1 image when it has no art; keep the card.
+            setState(e.currentTarget.naturalWidth < 10 ? 'failed' : 'loaded')
+          }}
+          onError={() => {
+            setState('failed')
+            reportCoverFailure()
+          }}
+        />
+      )}
     </div>
   )
 }

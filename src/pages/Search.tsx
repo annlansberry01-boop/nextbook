@@ -7,6 +7,9 @@ import { ensureBook, myBookStatuses, searchBooks, type MyStatus, type SearchResu
 import { coverUrlFor } from '../lib/types'
 import './Search.css'
 
+const OFFLINE =
+  "Open Library isn't responding right now. Search and covers come from this free library catalogue. Try again in a few minutes."
+
 const STATUS_LABEL: Record<MyStatus, string> = {
   reading: 'Reading now',
   read: 'Read',
@@ -19,6 +22,7 @@ export default function Search() {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[] | null>(null)
   const [loading, setLoading] = useState(false)
+  const [slow, setSlow] = useState(false)
   const [error, setError] = useState('')
   const [mine, setMine] = useState(new Map<string, { id: string; status: MyStatus }>())
   const [sheet, setSheet] = useState<SheetRequest | null>(null)
@@ -40,16 +44,36 @@ export default function Search() {
       return
     }
     const ctrl = new AbortController()
+    let slowTimer = 0
+    let giveUpTimer = 0
+    let gaveUp = false
     const t = window.setTimeout(() => {
       setLoading(true)
+      setSlow(false)
       setError('')
+      // Open Library can be slow: say so after 4 seconds, and stop waiting after 20.
+      slowTimer = window.setTimeout(() => setSlow(true), 4000)
+      giveUpTimer = window.setTimeout(() => {
+        gaveUp = true
+        ctrl.abort()
+      }, 20000)
       searchBooks(q, ctrl.signal)
         .then(setResults)
-        .catch((e: Error) => e.name !== 'AbortError' && setError(e.message))
-        .finally(() => setLoading(false))
+        .catch((e: Error) => {
+          if (e.name === 'AbortError' && !gaveUp) return
+          setError(OFFLINE)
+        })
+        .finally(() => {
+          window.clearTimeout(slowTimer)
+          window.clearTimeout(giveUpTimer)
+          setLoading(false)
+          setSlow(false)
+        })
     }, 400)
     return () => {
       window.clearTimeout(t)
+      window.clearTimeout(slowTimer)
+      window.clearTimeout(giveUpTimer)
       ctrl.abort()
     }
   }, [query])
@@ -94,7 +118,11 @@ export default function Search() {
       </div>
 
       {error && <div className="placeholder-card" role="alert">{error}</div>}
-      {loading && !results && <div className="search-note">Searching…</div>}
+      {loading && (!results || slow) && (
+        <div className="search-note" role="status">
+          {slow ? 'Still searching… Open Library can be slow at times.' : 'Searching…'}
+        </div>
+      )}
       {!results && !loading && !error && (
         <div className="search-note">Find any book, then add it to your TBR, mark it read, start it or DNF it.</div>
       )}

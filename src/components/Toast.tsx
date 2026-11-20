@@ -7,9 +7,11 @@ export default function Toast() {
   useEffect(() => {
     let t: number
     const on = (e: Event) => {
-      setMsg((e as CustomEvent<string>).detail)
+      const text = (e as CustomEvent<string>).detail
+      setMsg(text)
       window.clearTimeout(t)
-      t = window.setTimeout(() => setMsg(''), 2600)
+      // Longer messages stay up longer, so there's time to read them.
+      t = window.setTimeout(() => setMsg(''), Math.max(2600, text.length * 60))
     }
     window.addEventListener('nb-toast', on)
     return () => {

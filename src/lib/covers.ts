@@ -23,7 +23,8 @@ const isEnglish = (e: Edition) => langs(e).includes('/languages/eng')
  * Returns the current cover if it's already English (or nothing better exists).
  */
 export async function englishCoverId(workKey: string, title: string, current: number | null): Promise<number | null> {
-  const res = await fetch(`https://openlibrary.org${workKey}/editions.json?limit=100`)
+  // Don't keep anyone waiting on a slow Open Library: give up after 8 seconds and keep what we have.
+  const res = await fetch(`https://openlibrary.org${workKey}/editions.json?limit=100`, { signal: AbortSignal.timeout(8000) })
   if (!res.ok) return current
   const editions = ((await res.json()).entries ?? []) as Edition[]
   const t = norm(title)
@@ -35,13 +36,13 @@ export async function englishCoverId(workKey: string, title: string, current: nu
     // Which edition does the current cover belong to? Keep it unless we know it's not English.
     let owner: Edition | null = editions.find((e) => covers(e).includes(current)) ?? null
     if (!owner) {
-      const meta = await fetch(`https://covers.openlibrary.org/b/id/${current}.json`)
+      const meta = await fetch(`https://covers.openlibrary.org/b/id/${current}.json`, { signal: AbortSignal.timeout(8000) })
         .then((r) => (r.ok ? r.json() : null))
         .catch(() => null)
       const olid: string | undefined = meta?.olid
       // A cover attached to the work itself (…W), or with no record, is left alone.
       if (!olid || !olid.endsWith('M')) return current
-      owner = await fetch(`https://openlibrary.org/books/${olid}.json`)
+      owner = await fetch(`https://openlibrary.org/books/${olid}.json`, { signal: AbortSignal.timeout(8000) })
         .then((r) => (r.ok ? r.json() : null))
         .catch(() => null)
       if (!owner) return current
